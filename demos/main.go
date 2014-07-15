@@ -305,7 +305,8 @@ func generateIndexHtml(rsp http.ResponseWriter, req *http.Request, u *url.URL) {
 
 		HasMP3s     bool
 		JPlayerURL  string
-		JPlayerJSON template.JS
+		JPlayerMP3s []jplayerMP3Entry
+		//JPlayerJSON template.JS
 	}{
 		Title:      html.EscapeString(pathLink),
 		PathHREF:   html.EscapeString(pathLink), // TODO: URL path escape here!
@@ -314,9 +315,9 @@ func generateIndexHtml(rsp http.ResponseWriter, req *http.Request, u *url.URL) {
 		SortDate:   dateSort,
 		SortSize:   sizeSort,
 
-		HasMP3s:     hasMP3s,
-		JPlayerURL:  jplayerUrl,
-		JPlayerJSON: template.JS(""),
+		HasMP3s:    hasMP3s,
+		JPlayerURL: jplayerUrl,
+		//JPlayerJSON: template.JS(""),
 	}
 
 	// Add the Parent Directory link if we're above the jail root:
@@ -326,7 +327,7 @@ func generateIndexHtml(rsp http.ResponseWriter, req *http.Request, u *url.URL) {
 
 	if hasMP3s {
 		// Generate jPlayer playlist:
-		mp3List := make([]jplayerMP3Entry, 0, len(fis))
+		model.JPlayerMP3s = make([]jplayerMP3Entry, 0, len(fis))
 
 		for _, dfi := range fis {
 			name := dfi.Name()
@@ -353,13 +354,13 @@ func generateIndexHtml(rsp http.ResponseWriter, req *http.Request, u *url.URL) {
 				onlyname = name[0 : len(name)-len(ext)]
 			}
 
-			mp3List = append(mp3List, jplayerMP3Entry{
+			model.JPlayerMP3s = append(model.JPlayerMP3s, jplayerMP3Entry{
 				Title: onlyname,
 				MP3:   href,
 			})
 		}
 
-		model.JPlayerJSON = template.JS(marshal(mp3List))
+		//model.JPlayerJSON = template.JS(marshal(mp3List))
 	}
 
 	model.Entries = make([]indexEntry, 0, len(fis))
@@ -654,7 +655,11 @@ func main() {
 	}
 
 	// Watch the html templates for changes and reload them:
-	_, cleanup, err := web.WatchTemplates("ui", *htmlPath, "*.html", &uiTmpl)
+	_, cleanup, err := web.WatchTemplates("ui", *htmlPath, "*.html", func(t *template.Template) *template.Template {
+		return t.Funcs(map[string]interface{}{
+			"isLast": func(i, count int) bool { return i == count-1 },
+		})
+	}, &uiTmpl)
 	if err != nil {
 		log.Fatal(err)
 		return

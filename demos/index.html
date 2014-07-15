@@ -8,13 +8,19 @@
   <script type="text/javascript" src="{{.JPlayerURL}}/jquery.jplayer.min.js"></script>
   <script type="text/javascript" src="{{.JPlayerURL}}/jplayer.playlist.min.js"></script>
 {{if .HasMP3s}}<script type="text/javascript">
-    $(function() {
-      new jPlayerPlaylist({ jPlayer: "#jplayer" }, {{.JPlayerJSON}}, {
-        swfPath: {{.JPlayerURL}},
-    	supplied: "mp3",
-    	wmode: "window"
-      });
-    });
+$(function() {
+    new jPlayerPlaylist(
+        { jPlayer: "#jplayer" },
+        [{{range $i, $mp3 := .JPlayerMP3s}}
+           {{$mp3}}{{if not (isLast $i (len $.JPlayerMP3s))}},{{end}}{{end}}
+        ],
+        {
+            swfPath: {{.JPlayerURL}},
+            supplied: "mp3",
+            wmode: "window"
+        }
+    );
+});
 </script>{{end}}
 <style type="text/css">
 a, a:active {text-decoration: none; color: blue;}
