@@ -1,0 +1,112 @@
+{{define "index"}}<!DOCTYPE html>
+
+<html>
+<head>
+  <title>{{.Title}}</title>
+  <link href="{{.JPlayerURL}}/jplayer.blue.monday.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="{{.JPlayerURL}}/jquery.jplayer.min.js"></script>
+  <script type="text/javascript" src="{{.JPlayerURL}}/jplayer.playlist.min.js"></script>
+{{if .HasMP3s}}<script type="text/javascript">
+    $(function() {
+      new jPlayerPlaylist({ jPlayer: "#jplayer" }, {{.JPlayerJSON}}, {
+        swfPath: "/js",
+    	supplied: "mp3",
+    	wmode: "window"
+      });
+    });
+</script>{{end}}
+<style type="text/css">
+a, a:active {text-decoration: none; color: blue;}
+a:visited {color: #48468F;}
+a:hover, a:focus {text-decoration: underline; color: red;}
+body {background-color: #F5F5F5;}
+h2 {margin-bottom: 12px;}
+table {margin-left: 12px;}
+th, td { font: 90% monospace; text-align: left;}
+th { font-weight: bold; padding-right: 14px; padding-bottom: 3px;}
+td {padding-right: 14px;}
+td.n, th.n {white-space: nowrap;}
+td.m, th.m {white-space: nowrap;}
+td.s, th.s {white-space: nowrap; text-align: right;}
+div.list { background-color: white; border-top: 1px solid #646464; border-bottom: 1px solid #646464; padding-top: 10px; padding-bottom: 14px;}
+div.foot { font: 90% monospace; color: #787878; padding-top: 4px;}
+</style>
+</head>
+
+<body>
+  <h2>Index of {{.Title}}</h2>
+{{if .HasMP3s}}  <div id="jplayer" class="jp-jplayer"></div>
+
+  <div id="jp_container_1" class="jp-audio" style="float: left; margin-right:12px;">
+    <div class="jp-type-playlist">
+        <div class="jp-gui jp-interface">
+            <ul class="jp-controls">
+                <li><a href="javascript:;" class="jp-previous" tabindex="1">previous</a></li>
+                <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+                <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+                <li><a href="javascript:;" class="jp-next" tabindex="1">next</a></li>
+                <li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
+                <li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
+                <li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
+                <li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li>
+            </ul>
+            <div class="jp-progress">
+                <div class="jp-seek-bar">
+                    <div class="jp-play-bar"></div>
+                </div>
+            </div>
+            <div class="jp-volume-bar">
+                <div class="jp-volume-bar-value"></div>
+            </div>
+            <div class="jp-time-holder">
+                <div class="jp-current-time"></div>
+                <div class="jp-duration"></div>
+            </div>
+            <ul class="jp-toggles">
+                <li><a href="javascript:;" class="jp-shuffle" tabindex="1" title="shuffle">shuffle</a></li>
+                <li><a href="javascript:;" class="jp-shuffle-off" tabindex="1" title="shuffle off">shuffle off</a></li>
+                <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
+                <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
+            </ul>
+        </div>
+        <div class="jp-playlist">
+            <ul>
+                <li></li>
+            </ul>
+        </div>
+        <div class="jp-no-solution">
+            <span>Update Required</span>
+            To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+        </div>
+    </div>
+  </div>{{end}}
+  <div class="list" style="overflow: auto">
+    <table cellpadding="0" cellspacing="0" summary="Directory Listing">
+      <thead>
+        <tr>
+          <th class="n"><a href="{{.PathHREF}}?sort={{.SortName}}">Name</a></th>
+          <th class="m"><a href="{{.PathHREF}}?sort={{.SortDate}}">Last Modified</a></th>
+          <th class="s"><a href="{{.PathHREF}}?sort={{.SortSize}}">Size</a></th>
+          <th class="t">Type</th>
+        </tr>
+      </thead>
+      <tbody>
+{{if (ne .ParentHREF "")}}        <tr>
+          <td class="n"><a href="{{.ParentHREF}}">../</a></td>
+          <td class="m"></td>
+          <td class="s"></td>
+          <td class="t">Directory</td>
+        </tr>
+{{end}}{{range .Entries}}        <tr>
+          <td class="n"><a href="{{.HREF}}">{{.Name}}</a></td>
+          <td class="m">{{(.ModTime.Format "2006-01-02 15:04:05 -0700 MST")}}</td>
+          <td class="s">{{.Size}}</td>
+          <td class="t">{{.MimeType}}</td>
+        </tr>
+{{end}}      </tbody>
+    </table>
+  </div>
+</body>
+</html>
+{{end}}
