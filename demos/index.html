@@ -10,7 +10,7 @@
 {{if .HasMP3s}}<script type="text/javascript">
     $(function() {
       new jPlayerPlaylist({ jPlayer: "#jplayer" }, {{.JPlayerJSON}}, {
-        swfPath: "/js",
+        swfPath: {{.JPlayerURL}},
     	supplied: "mp3",
     	wmode: "window"
       });

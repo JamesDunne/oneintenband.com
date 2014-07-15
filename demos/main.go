@@ -328,7 +328,6 @@ func generateIndexHtml(rsp http.ResponseWriter, req *http.Request, u *url.URL) {
 		// Generate jPlayer playlist:
 		mp3List := make([]jplayerMP3Entry, 0, len(fis))
 
-		first := true
 		for _, dfi := range fis {
 			name := dfi.Name()
 			if name[0] == '.' {
@@ -348,12 +347,6 @@ func generateIndexHtml(rsp http.ResponseWriter, req *http.Request, u *url.URL) {
 				continue
 			}
 
-			if !first {
-				fmt.Fprintf(rsp, ", ")
-			} else {
-				fmt.Fprintf(rsp, "  ")
-			}
-
 			ext := path.Ext(name)
 			onlyname := name
 			if ext != "" {
@@ -364,7 +357,6 @@ func generateIndexHtml(rsp http.ResponseWriter, req *http.Request, u *url.URL) {
 				Title: onlyname,
 				MP3:   href,
 			})
-			first = false
 		}
 
 		model.JPlayerJSON = template.JS(marshal(mp3List))
