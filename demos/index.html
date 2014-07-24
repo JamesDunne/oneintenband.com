@@ -41,7 +41,7 @@ div.foot { font: 90% monospace; color: #787878; padding-top: 4px;}
 </head>
 
 <body>
-  <h2>Index of {{.Title}}</h2>
+  <h2>One in Ten - Demo Reel</h2>
 {{if .HasMP3s}}  <div id="jplayer" class="jp-jplayer"></div>
 
   <div id="jp_container_1" class="jp-audio" style="float: left; margin-right:12px;">
@@ -87,32 +87,6 @@ div.foot { font: 90% monospace; color: #787878; padding-top: 4px;}
         </div>
     </div>
   </div>{{end}}
-  <div class="list" style="overflow: auto">
-    <table cellpadding="0" cellspacing="0" summary="Directory Listing">
-      <thead>
-        <tr>
-          <th class="n"><a href="{{.PathHREF}}?sort={{.SortName}}">Name</a></th>
-          <th class="m"><a href="{{.PathHREF}}?sort={{.SortDate}}">Last Modified</a></th>
-          <th class="s"><a href="{{.PathHREF}}?sort={{.SortSize}}">Size</a></th>
-          <th class="t">Type</th>
-        </tr>
-      </thead>
-      <tbody>
-{{if (ne .ParentHREF "")}}        <tr>
-          <td class="n"><a href="{{.ParentHREF}}">../</a></td>
-          <td class="m"></td>
-          <td class="s"></td>
-          <td class="t">Directory</td>
-        </tr>
-{{end}}{{range .Entries}}        <tr>
-          <td class="n"><a href="{{.HREF}}">{{.Name}}</a></td>
-          <td class="m">{{(.ModTime.Format "2006-01-02 15:04:05 -0700 MST")}}</td>
-          <td class="s">{{.Size}}</td>
-          <td class="t">{{.MimeType}}</td>
-        </tr>
-{{end}}      </tbody>
-    </table>
-  </div>
 </body>
 </html>
 {{end}}
