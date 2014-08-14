@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"html/template"
 	"net/http"
+	"path/filepath"
 )
 
 import (
@@ -39,6 +40,14 @@ func requestHandler(rsp http.ResponseWriter, req *http.Request) {
 		}
 	}
 
+	verbose_log("%s %s\n", req.Method, req.URL)
+
+	// HACK(jsd): Temporary solution to serve static files.
+	if staticPath, ok := web.MatchSimpleRouteRaw(req.URL.Path, "/static/"); ok {
+		http.ServeFile(rsp, req, filepath.Join("../static/", staticPath))
+		return
+	}
+
 	// Decide which template to execute:
 	templateName := req.URL.Path[1:]
 	if templateName == "" {
@@ -51,7 +60,12 @@ func requestHandler(rsp http.ResponseWriter, req *http.Request) {
 	bufWriter := bytes.NewBuffer(make([]byte, 0, 16384))
 
 	// Execute the named template:
-	err := uiTmpl.ExecuteTemplate(bufWriter, templateName, req)
+	model := struct {
+		Static string
+	}{
+		Static: "/static",
+	}
+	err := uiTmpl.ExecuteTemplate(bufWriter, templateName, model)
 	if web.AsWebError(err, http.StatusInternalServerError).RespondHTML(rsp) {
 		return
 	}

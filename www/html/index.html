@@ -1,5 +1,5 @@
 {{define "index"}}
-{{template "head"}}
+{{template "head" $}}
 		<script type="text/javascript">
 			$(window).load(function(){
 				$('.slider')._TMS({
@@ -15,7 +15,7 @@
 				$("a[data-gal^='prettyVideo']").prettyPhoto({animation_speed:'normal',theme:'facebook',slideshow:false, autoplay_slideshow: false});
 			}); 
 		</script>
-{{template "header"}}
+{{template "header" $}}
 			<section id="content"><div class="ic">More Website Templates @ TemplateMonster.com. November 21, 2011!</div>
 				<div class="main">
 					<div class="bg-2">
@@ -81,7 +81,7 @@
 										<div class="padding-grid-2">
 											<h3 class="letter">In Stores <strong>Now!</strong></h3>
 											<div class="wrapper">
-												<figure class="style-img fleft"><a href="#"><img src="images/page1-img1.jpg"  alt=""></a></figure>
+												<figure class="style-img fleft"><a href="#"><img src="{{$.Static}}/images/page1-img1.jpg"  alt=""></a></figure>
 											</div>
 										</div>
 									</article>
@@ -118,7 +118,7 @@
 										<h3 class="letter">Latest <strong>Video</strong></h3>
 										
 										<div class="wrapper">
-											<figure class="style-img-2 fleft"><a class="lightbox-image" href="video/video_AS3.swf?width=495&amp;height=275&amp;fileVideo=intro06.flv" data-gal="prettyVideo[prettyVideo]"><img src="images/page1-img2.jpg"  alt=""></a></figure>
+											<figure class="style-img-2 fleft"><a class="lightbox-image" href="video/video_AS3.swf?width=495&amp;height=275&amp;fileVideo=intro06.flv" data-gal="prettyVideo[prettyVideo]"><img src="{{$.Static}}/images/page1-img2.jpg"  alt=""></a></figure>
 										</div>
 									</div>
 								</article>
