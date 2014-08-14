@@ -18,6 +18,7 @@ var templateFunctions template.FuncMap = template.FuncMap(map[string]interface{}
 	"add": func(a, b int) int { return a + b },
 	"sub": func(a, b int) int { return a - b },
 	"query": func(sql string) (rows []map[string]interface{}, err error) {
+
 		return nil, nil
 	},
 })

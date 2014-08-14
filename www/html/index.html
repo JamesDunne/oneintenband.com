@@ -25,6 +25,7 @@
 									<article class="grid_4">
 										<div class="padding-grid-1">
 											<h3 class="letter">Latest <strong>News</strong></h3>
+											{{with $rows := (query `select top 3 Date, Contents from News order by Date desc`)}}{{.}}{{end}}
 											<div class="wrapper img-indent-bot1">
 												<time class="time time-stule-1" datetime="2011-11-09"> <strong class="text-1">09</strong><strong class="text-2">nov</strong></time>
 												<div class="extra-wrap">

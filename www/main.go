@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"flag"
 	"html/template"
 	"log"
@@ -9,14 +10,21 @@ import (
 	"path"
 )
 
+import _ "github.com/lib/pq"
+
 import (
 	"github.com/JamesDunne/go-util/base"
 	"github.com/JamesDunne/go-util/web"
 )
 
+const (
+	dbConnectionString = "host=localhost sslmode=disable user=www password=band dbname=oneintenband "
+)
+
 var (
 	base_folder = ""
 	verbose     = false
+	db          *sql.DB
 )
 
 func html_path() string { return base_folder + "/html" }
@@ -43,6 +51,13 @@ func main() {
 
 	// Make directories we need:
 	base_folder = base.CanonicalPath(path.Clean(*fs))
+
+	// Open database:
+	db, err = sql.Open("postgres", dbConnectionString)
+	if err != nil {
+		log.Println(err)
+		return
+	}
 
 	// Watch the html templates for changes and reload them:
 	_, cleanup, err := web.WatchTemplates("ui", html_path(), "*.html", uiTemplatesPreParse, &uiTmpl)
