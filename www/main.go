@@ -16,9 +16,17 @@ import (
 
 var (
 	base_folder = ""
+	verbose     = false
 )
 
 func html_path() string { return base_folder + "/html" }
+
+func verbose_log(fmt string, args ...interface{}) {
+	if !verbose {
+		return
+	}
+	log.Printf(fmt, args)
+}
 
 var uiTmpl *template.Template
 
@@ -26,6 +34,7 @@ func main() {
 	// Define our commandline flags:
 	fs := flag.String("fs", ".", "Root directory of served files and templates")
 	fl_listen_uri := flag.String("l", "tcp://0.0.0.0:8080", "listen URI (schemes available are tcp, unix)")
+	flag.BoolVar(&verbose, "v", false, "verbose logging")
 	flag.Parse()
 
 	// Parse all the URIs:
