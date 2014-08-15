@@ -24,6 +24,7 @@ const (
 var (
 	base_folder = ""
 	verbose     = false
+	debug       = false
 	db          *sql.DB
 )
 
@@ -36,6 +37,13 @@ func verbose_log(fmt string, args ...interface{}) {
 	log.Printf(fmt, args...)
 }
 
+func debug_log(fmt string, args ...interface{}) {
+	if !debug {
+		return
+	}
+	log.Printf(fmt, args...)
+}
+
 var uiTmpl *template.Template
 
 func main() {
@@ -43,6 +51,7 @@ func main() {
 	fs := flag.String("fs", ".", "Root directory of served files and templates")
 	fl_listen_uri := flag.String("l", "tcp://0.0.0.0:8080", "listen URI (schemes available are tcp, unix)")
 	flag.BoolVar(&verbose, "v", true, "verbose logging")
+	flag.BoolVar(&debug, "d", true, "debug logging")
 	flag.Parse()
 
 	// Parse all the URIs:

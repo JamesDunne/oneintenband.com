@@ -13,14 +13,45 @@ import (
 	"github.com/JamesDunne/go-util/web"
 )
 
+func RunQuery(sql string) (results []map[string]interface{}, err error) {
+	debug_log("query: %s\n", sql)
+	rows, err := db.Query(sql)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	colNames, err := rows.Columns()
+	debug_log("colnames: %s\n", colNames)
+
+	results = make([]map[string]interface{}, 0, 10)
+
+	colValues := make([]interface{}, len(colNames))
+	cols := make([]interface{}, len(colNames))
+	for i := 0; i < len(colNames); i++ {
+		cols[i] = &colValues[i]
+	}
+	for rows.Next() {
+		err = rows.Scan(cols...)
+		if err != nil {
+			return nil, err
+		}
+
+		colMap := make(map[string]interface{})
+		for i := 0; i < len(colNames); i++ {
+			colMap[colNames[i]] = colValues[i]
+		}
+		results = append(results, colMap)
+	}
+
+	return results, nil
+}
+
 var templateFunctions template.FuncMap = template.FuncMap(map[string]interface{}{
 	// 'Add' function to add two integers:
-	"add": func(a, b int) int { return a + b },
-	"sub": func(a, b int) int { return a - b },
-	"query": func(sql string) (rows []map[string]interface{}, err error) {
-
-		return nil, nil
-	},
+	"add":   func(a, b int) int { return a + b },
+	"sub":   func(a, b int) int { return a - b },
+	"query": RunQuery,
 })
 
 // Pre-parse step to process HTML templates and add functions for templates to execute:
