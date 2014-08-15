@@ -3,9 +3,11 @@ package main
 import (
 	//"database/sql"
 	"bytes"
+	"fmt"
 	"html/template"
 	"net/http"
 	"path/filepath"
+	"reflect"
 )
 
 import (
@@ -39,7 +41,17 @@ func RunQuery(sql string) (results []map[string]interface{}, err error) {
 
 		colMap := make(map[string]interface{})
 		for i := 0; i < len(colNames); i++ {
-			colMap[colNames[i]] = colValues[i]
+			var rv interface{}
+			v := colValues[i]
+			switch r := v.(type) {
+			case []byte:
+				// Convert `[]byte` to `string`:
+				rv = string(r)
+			default:
+				rv = v
+			}
+
+			colMap[colNames[i]] = rv
 		}
 		results = append(results, colMap)
 	}
@@ -49,8 +61,24 @@ func RunQuery(sql string) (results []map[string]interface{}, err error) {
 
 var templateFunctions template.FuncMap = template.FuncMap(map[string]interface{}{
 	// 'Add' function to add two integers:
-	"add":   func(a, b int) int { return a + b },
-	"sub":   func(a, b int) int { return a - b },
+	"add": func(a, b int) int { return a + b },
+	"sub": func(a, b int) int { return a - b },
+	"string": func(a interface{}) (string, error) {
+		switch s := a.(type) {
+		case string:
+			return s, nil
+		case []byte:
+			return string(s), nil
+		default:
+			debug_log("string: %v\n", s)
+		}
+		if s, ok := a.(fmt.Stringer); ok {
+			return s.String(), nil
+		}
+		av := reflect.ValueOf(a)
+		debug_log("string: reflect %v\n", av)
+		return "", fmt.Errorf("Cannot stringify!")
+	},
 	"query": RunQuery,
 })
 

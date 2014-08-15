@@ -25,31 +25,16 @@
 									<article class="grid_4">
 										<div class="padding-grid-1">
 											<h3 class="letter">Latest <strong>News</strong></h3>
-											{{with $rows := (query `select Date, Contents from News order by Date desc limit 3`)}}{{.}}{{end}}
+											{{range (query `select Date, to_char(Date, 'mon') as Month, to_char(Date, 'DD') as Day, Contents from News order by Date desc limit 3`)}}
 											<div class="wrapper img-indent-bot1">
-												<time class="time time-stule-1" datetime="2011-11-09"> <strong class="text-1">09</strong><strong class="text-2">nov</strong></time>
+												<time class="time time-stule-1" datetime="{{.date}}"> <strong class="text-1">{{.day}}</strong><strong class="text-2">{{.month}}</strong></time>
 												<div class="extra-wrap">
 													<div class="indent-top">
-														Rock Band is one of <a class="link" target="_blank" href="http://blog.templatemonster.com/free-website-templates/">free website templates</a> created by Template Monster team.
+														{{.contents}}
 													</div>
 												</div>
 											</div>
-											<div class="wrapper img-indent-bot1">
-												<time class="time time-stule-1" datetime="2011-11-07"> <strong class="text-1">07</strong><strong class="text-2">nov</strong></time>
-												<div class="extra-wrap">
-													<div class="indent-top">
-														This <a class="link" href="http://blog.templatemonster.com/2011/11/21/free-website-template-jquery-gallery-music/" target="_blank" rel="nofollow">Rock Band Template</a> goes with two packages – with PSD source files and without them.
-													</div>
-												</div>
-											</div>
-											<div class="wrapper">
-												<time class="time time-stule-1" datetime="2011-11-02"> <strong class="text-1">02</strong><strong class="text-2">nov</strong></time>
-												<div class="extra-wrap">
-													<div class="indent-top">
-														PSD source files are available for free for the registered members <br />of Templates.com.
-													</div>
-												</div>
-											</div>
+											{{end}}
 										</div>
 									</article>
 									<article class="grid_4 alpha">
