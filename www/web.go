@@ -7,7 +7,7 @@ import (
 	"html/template"
 	"net/http"
 	"path/filepath"
-	"reflect"
+	//"reflect"
 )
 
 import (
@@ -60,7 +60,6 @@ func RunQuery(sql string) (results []map[string]interface{}, err error) {
 }
 
 var templateFunctions template.FuncMap = template.FuncMap(map[string]interface{}{
-	// 'Add' function to add two integers:
 	"add": func(a, b int) int { return a + b },
 	"sub": func(a, b int) int { return a - b },
 	"string": func(a interface{}) (string, error) {
@@ -75,9 +74,10 @@ var templateFunctions template.FuncMap = template.FuncMap(map[string]interface{}
 		if s, ok := a.(fmt.Stringer); ok {
 			return s.String(), nil
 		}
-		av := reflect.ValueOf(a)
-		debug_log("string: reflect %v\n", av)
 		return "", fmt.Errorf("Cannot stringify!")
+	},
+	"html": func(a string) template.HTML {
+		return template.HTML(a)
 	},
 	"query": RunQuery,
 })

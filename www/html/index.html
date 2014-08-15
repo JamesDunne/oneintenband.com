@@ -25,12 +25,12 @@
 									<article class="grid_4">
 										<div class="padding-grid-1">
 											<h3 class="letter">Latest <strong>News</strong></h3>
-											{{range (query `select Date, to_char(Date, 'mon') as Month, to_char(Date, 'DD') as Day, Contents from News order by Date desc limit 3`)}}
+											{{range (query `select date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, contents from news order by date desc limit 3`)}}
 											<div class="wrapper img-indent-bot1">
 												<time class="time time-stule-1" datetime="{{.date}}"> <strong class="text-1">{{.day}}</strong><strong class="text-2">{{.month}}</strong></time>
 												<div class="extra-wrap">
 													<div class="indent-top">
-														{{.contents}}
+														{{html .contents}}
 													</div>
 												</div>
 											</div>
