@@ -110,34 +110,39 @@ func requestHandler(rsp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// Decide which template to execute:
-	templateName := req.URL.Path[1:]
-	if templateName == "" {
-		templateName = "index"
-	}
+	web.HTML(web.Log(web.DefaultWebErrorLog, web.WebErrorHandlerFunc(func(rsp http.ResponseWriter, req *http.Request) (werr *web.WebError) {
+		// Decide which template to execute:
+		templateName := req.URL.Path[1:]
+		if templateName == "" {
+			templateName = "index"
+		}
 
-	verbose_log("templateName: '%s'\n", templateName)
+		verbose_log("templateName: '%s'\n", templateName)
 
-	// Create a buffer to write a response to:
-	bufWriter := bytes.NewBuffer(make([]byte, 0, 16384))
+		// Create a buffer to write a response to:
+		bufWriter := bytes.NewBuffer(make([]byte, 0, 16384))
 
-	// Execute the named template:
-	model := struct {
-		Static   string
-		Template string
-	}{
-		Static:   "/static",
-		Template: templateName,
-	}
-	err := uiTmpl.ExecuteTemplate(bufWriter, templateName, model)
-	if web.AsWebError(err, http.StatusInternalServerError).Do(func(werr *web.WebError) { weberror_log(req, werr) }).RespondHTML(rsp) {
+		// Execute the named template:
+		model := struct {
+			Static   string
+			Template string
+		}{
+			Static:   "/static",
+			Template: templateName,
+		}
+		err := uiTmpl.ExecuteTemplate(bufWriter, templateName, model)
+		werr = web.AsWebError(err, http.StatusInternalServerError)
+		if werr != nil {
+			return
+		}
+
+		// Write the buffer's contents to the HTTP response:
+		_, err = bufWriter.WriteTo(rsp)
+		werr = web.AsWebError(err, http.StatusInternalServerError)
+		if werr != nil {
+			return
+		}
 		return
-	}
-
-	// Write the buffer's contents to the HTTP response:
-	_, err = bufWriter.WriteTo(rsp)
-	if web.AsWebError(err, http.StatusInternalServerError).RespondHTML(rsp) {
-		return
-	}
+	}))).ServeHTTP(rsp, req)
 	return
 }
