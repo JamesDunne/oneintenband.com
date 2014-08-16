@@ -15,9 +15,9 @@ import (
 	"github.com/JamesDunne/go-util/web"
 )
 
-func RunQuery(sql string) (results []map[string]interface{}, err error) {
+func RunQuery(sql string, args ...interface{}) (results []map[string]interface{}, err error) {
 	debug_log("query: %s\n", sql)
-	rows, err := db.Query(sql)
+	rows, err := db.Query(sql, args...)
 	if err != nil {
 		return nil, err
 	}
