@@ -74,6 +74,21 @@ CREATE TABLE news (
 ALTER TABLE public.news OWNER TO www;
 
 --
+-- Name: page; Type: TABLE; Schema: public; Owner: www; Tablespace: 
+--
+
+CREATE TABLE page (
+    name character varying,
+    title character varying,
+    headorder integer,
+    disabled boolean DEFAULT false NOT NULL,
+    urlpath character varying
+);
+
+
+ALTER TABLE public.page OWNER TO www;
+
+--
 -- Name: shows; Type: TABLE; Schema: public; Owner: www; Tablespace: 
 --
 
@@ -108,6 +123,14 @@ ALTER TABLE public.song OWNER TO www;
 
 ALTER TABLE ONLY album
     ADD CONSTRAINT album_pkey PRIMARY KEY (album_id);
+
+
+--
+-- Name: page_headorder_key; Type: CONSTRAINT; Schema: public; Owner: www; Tablespace: 
+--
+
+ALTER TABLE ONLY page
+    ADD CONSTRAINT page_headorder_key UNIQUE (headorder);
 
 
 --

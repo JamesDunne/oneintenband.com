@@ -1,4 +1,8 @@
-{{define "index"}}
+{{define "index"}}<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<title>One in Ten</title>
 {{template "head" $}}
 		<script type="text/javascript">
 			$(window).load(function(){
@@ -15,7 +19,26 @@
 				$("a[data-gal^='prettyVideo']").prettyPhoto({animation_speed:'normal',theme:'facebook',slideshow:false, autoplay_slideshow: false});
 			}); 
 		</script>
-{{template "header" $}}
+	</head>
+	<body id="page1">
+		<div class="extra">
+			<header>
+				<div class="main">
+					<div class="bg-1">
+						<h1><a href="/">Rock Band</a></h1>
+					</div>
+{{template "nav" $}}
+					<div class="slider-wrapper">
+						<div class="slider">
+							<ul class="items">
+								<li><img src="{{$.Static}}/images/slider-img1.jpg" alt="" /></li>
+								<li><img src="{{$.Static}}/images/slider-img2.jpg" alt="" /></li>
+								<li><img src="{{$.Static}}/images/slider-img3.jpg" alt="" /></li>
+							</ul> 
+						</div>
+					</div>
+				</div>
+			</header>
 			<section id="content"><div class="ic">More Website Templates @ TemplateMonster.com. November 21, 2011!</div>
 				<div class="main">
 					<div class="bg-2">
@@ -25,7 +48,7 @@
 									<article class="grid_4">
 										<div class="padding-grid-1">
 											<h3 class="letter">Latest <strong>News</strong></h3>
-											{{range (query `select date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, contents from news order by date desc limit 3`)}}
+											{{range (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, contents from news order by date desc limit 3`)}}
 											<div class="wrapper img-indent-bot1">
 												<time class="time time-stule-1" datetime="{{.date}}"> <strong class="text-1">{{.day}}</strong><strong class="text-2">{{.month}}</strong></time>
 												<div class="extra-wrap">
@@ -45,7 +68,7 @@
 												<time class="time time-stule-2" datetime="{{.date}}"> <strong class="text-3">{{.day}}</strong><strong class="text-4">{{.month}}</strong></time>
 												<div class="extra-wrap">
 													<h4 class="indent-top"><a href="#">{{.city}}</a></h4>
-													{{.venue}}: {{.notes}}
+													<strong>{{.venue}}</strong>: {{.notes}}
 												</div>
 											</div>
 											{{end}}
@@ -53,7 +76,7 @@
 									</article>
 									<article class="grid_4 alpha">
 										<div class="padding-grid-2">
-											<h3 class="letter">In Stores <strong>Now!</strong></h3>
+											<h3 class="letter">Something <strong>Here!</strong></h3>
 											<div class="wrapper">
 												<figure class="style-img fleft"><a href="#"><img src="{{$.Static}}/images/page1-img1.jpg"  alt=""></a></figure>
 											</div>
@@ -109,5 +132,8 @@
 				</div>
 				<div class="block"></div>
 			</section>
+		</div>
 {{template "footer"}}
+	</body>
+</html>
 {{end}}

@@ -121,9 +121,11 @@ func requestHandler(rsp http.ResponseWriter, req *http.Request) {
 
 	// Execute the named template:
 	model := struct {
-		Static string
+		Static   string
+		Template string
 	}{
-		Static: "/static",
+		Static:   "/static",
+		Template: templateName,
 	}
 	err := uiTmpl.ExecuteTemplate(bufWriter, templateName, model)
 	if web.AsWebError(err, http.StatusInternalServerError).RespondHTML(rsp) {
