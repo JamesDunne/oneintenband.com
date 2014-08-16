@@ -26,9 +26,9 @@
 									<div class="padding-grid-1">
 										<h3 class="letter">Our <strong>Discography</strong></h3>
 									</div>
-									{{$albums := (query `select a.album_id, to_char(a.date, 'YYYY') as year, a.title, a.best_album_mix_id, m.mix_name from album a, album_mix m where a.best_album_mix_id = m.album_mix_id order by a.year desc`)}}
+									{{$albums := (query `select a.album_id, to_char(a.date, 'YYYY') as year, a.title, a.description, a.best_album_mix_id, m.mix_name from album a, album_mix m where a.best_album_mix_id = m.album_mix_id order by a.date desc`)}}
 									{{range $i, $album := $albums}}
-									<div class="wrapper p3">
+									<div class="wrapper{{if (lt $i (sub (len $albums) 1))}} p3{{end}}">
 										<article class="grid_4 alpha">
 											<div class="padding-grid-2">
 												<div class="wrapper">
@@ -39,12 +39,12 @@
 										<article class="grid_8 alpha">
 											<div class="padding-grid-2">
 												<h4 class="margin-none indent-top1"><strong>{{$album.year}}.</strong>  {{$album.title}}{{with $album.mix_name}} (mix {{.}}){{end}}</h4>
-												<p class="prev-indent-bot">Lorem ipsum dolor consctetur adipisicing elitdo eusmod tempor incididunt labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+												<p class="prev-indent-bot">{{html (string $album.description)}}</p>
 												<div class="wrapper">
-												{{$songs := (query `select to_char(track, '00') as track, title, href from song where album_mix_id = $1` $album.best_album_mix_id)}}
+													{{$songs := (query `select to_char(track, '00') as track, title, artist, href from song where album_mix_id = $1` $album.best_album_mix_id)}}
 													<ul class="list-1 fleft">
 													{{range $songs}}
-														<li><a href="{{.href}}">{{.track}}. {{.title}}</a></li>
+														<li><a href="{{with .href}}{{.}}{{else}}#{{end}}">{{.track}}. {{.title}}{{with .artist}}  // {{.}}{{end}}</a></li>
 													{{end}}
 													</ul>
 													<ul class="list-2 fright">
@@ -57,49 +57,6 @@
 										</article>
 									</div>
 									{{end}}
-									<div class="wrapper">
-										<article class="grid_4 alpha">
-											<div class="padding-grid-2">
-												<div class="wrapper">
-													<figure class="style-img-2 fleft"><a href="#"><img src="images/page2-img3.jpg"  alt=""></a></figure>
-												</div>
-											</div>
-										</article>
-										<article class="grid_8 alpha">
-											<div class="padding-grid-2">
-												<h4 class="margin-none indent-top1"><strong>2010. </strong>Rock &amp; Roll</h4>
-												<p class="prev-indent-bot">Lorem ipsum dolor consctetur adipisicing elitdo eusmod tempor incididunt labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-												<div class="wrapper">
-													<ul class="list-1 fleft">
-														<li><a href="#">01. Duis aute irure dolor</a></li>
-														<li><a href="#">02. In reprehenderit in voluptate</a></li>
-														<li><a href="#">03. Velit esse cillum dolore</a></li>
-														<li><a href="#">04. Eu fugiat nulla pariatur</a></li>
-														<li><a href="#">05. Excepteur sint occaecat</a></li>
-														<li><a href="#">06. Cupidatat non</a></li>
-														<li><a href="#">07. Proident sunt in</a></li>
-														<li><a href="#">08. Culpa qui officia deserunt mollit</a></li>
-														<li><a href="#">09. Anim id est laborum</a></li>
-														<li><a href="#">10. At vero eos et accusamus</a></li>
-														<li><a href="#">11. Et iusto odio dignissimos</a></li>
-													</ul>
-													<ul class="list-2 fright">
-														<li><span><a class="left-list" href="#"></a></span><a class="right-list" href="#"></a></li>
-														<li><span><a class="left-list" href="#"></a></span><a class="right-list" href="#"></a></li>
-														<li><span><a class="left-list" href="#"></a></span><a class="right-list" href="#"></a></li>
-														<li><span><a class="left-list" href="#"></a></span><a class="right-list" href="#"></a></li>
-														<li><span><a class="left-list" href="#"></a></span><a class="right-list" href="#"></a></li>
-														<li><span><a class="left-list" href="#"></a></span><a class="right-list" href="#"></a></li>
-														<li><span><a class="left-list" href="#"></a></span><a class="right-list" href="#"></a></li>
-														<li><span><a class="left-list" href="#"></a></span><a class="right-list" href="#"></a></li>
-														<li><span><a class="left-list" href="#"></a></span><a class="right-list" href="#"></a></li>
-														<li><span><a class="left-list" href="#"></a></span><a class="right-list" href="#"></a></li>
-														<li><span><a class="left-list" href="#"></a></span><a class="right-list" href="#"></a></li>
-													</ul>
-												</div>
-											</div>
-										</article>
-									</div>
 								</div>
 							</div>
 						</div>

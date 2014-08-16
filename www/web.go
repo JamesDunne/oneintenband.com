@@ -47,6 +47,8 @@ func RunQuery(sql string, args ...interface{}) (results []map[string]interface{}
 			case []byte:
 				// Convert `[]byte` to `string`:
 				rv = string(r)
+			case nil:
+				rv = ""
 			default:
 				rv = v
 			}

@@ -43,6 +43,20 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 SET search_path = public, pg_catalog;
 
+--
+-- Name: album_id; Type: SEQUENCE; Schema: public; Owner: www
+--
+
+CREATE SEQUENCE album_id
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.album_id OWNER TO www;
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -52,14 +66,42 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE album (
-    album_id integer NOT NULL,
+    album_id integer DEFAULT nextval('album_id'::regclass) NOT NULL,
     date date,
     title character varying,
-    mix_version integer
+    description character varying,
+    best_album_mix_id integer
 );
 
 
 ALTER TABLE public.album OWNER TO www;
+
+--
+-- Name: album_mix_id; Type: SEQUENCE; Schema: public; Owner: www
+--
+
+CREATE SEQUENCE album_mix_id
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.album_mix_id OWNER TO www;
+
+--
+-- Name: album_mix; Type: TABLE; Schema: public; Owner: www; Tablespace: 
+--
+
+CREATE TABLE album_mix (
+    album_mix_id integer DEFAULT nextval('album_mix_id'::regclass) NOT NULL,
+    album_id integer NOT NULL,
+    mix_name character varying
+);
+
+
+ALTER TABLE public.album_mix OWNER TO www;
 
 --
 -- Name: news; Type: TABLE; Schema: public; Owner: www; Tablespace: 
@@ -103,19 +145,42 @@ CREATE TABLE shows (
 ALTER TABLE public.shows OWNER TO www;
 
 --
+-- Name: song_id; Type: SEQUENCE; Schema: public; Owner: www
+--
+
+CREATE SEQUENCE song_id
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.song_id OWNER TO www;
+
+--
 -- Name: song; Type: TABLE; Schema: public; Owner: www; Tablespace: 
 --
 
 CREATE TABLE song (
-    song_id integer NOT NULL,
-    album_id integer,
-    track integer,
+    song_id integer DEFAULT nextval('song_id'::regclass) NOT NULL,
+    album_mix_id integer NOT NULL,
     title character varying,
-    path character varying
+    href character varying,
+    track integer,
+    artist character varying
 );
 
 
 ALTER TABLE public.song OWNER TO www;
+
+--
+-- Name: album_mix_pkey; Type: CONSTRAINT; Schema: public; Owner: www; Tablespace: 
+--
+
+ALTER TABLE ONLY album_mix
+    ADD CONSTRAINT album_mix_pkey PRIMARY KEY (album_mix_id);
+
 
 --
 -- Name: album_pkey; Type: CONSTRAINT; Schema: public; Owner: www; Tablespace: 
@@ -142,11 +207,19 @@ ALTER TABLE ONLY song
 
 
 --
--- Name: song_album_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: www
+-- Name: album_mix_album_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: www
+--
+
+ALTER TABLE ONLY album_mix
+    ADD CONSTRAINT album_mix_album_id_fkey FOREIGN KEY (album_id) REFERENCES album(album_id);
+
+
+--
+-- Name: song_album_mix_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: www
 --
 
 ALTER TABLE ONLY song
-    ADD CONSTRAINT song_album_id_fkey FOREIGN KEY (album_id) REFERENCES album(album_id);
+    ADD CONSTRAINT song_album_mix_id_fkey FOREIGN KEY (album_mix_id) REFERENCES album_mix(album_mix_id);
 
 
 --
