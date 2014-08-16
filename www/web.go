@@ -130,7 +130,7 @@ func requestHandler(rsp http.ResponseWriter, req *http.Request) {
 		Template: templateName,
 	}
 	err := uiTmpl.ExecuteTemplate(bufWriter, templateName, model)
-	if web.AsWebError(err, http.StatusInternalServerError).RespondHTML(rsp) {
+	if web.AsWebError(err, http.StatusInternalServerError).Do(func(werr *web.WebError) { weberror_log(req, werr) }).RespondHTML(rsp) {
 		return
 	}
 

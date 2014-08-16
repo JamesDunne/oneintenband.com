@@ -1,0 +1,86 @@
+{{define "dates"}}<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<title>One in Ten - audio</title>
+{{template "head" $}}
+	</head>
+	<body>
+	<body id="page1">
+		<div class="extra">
+			<header>
+				<div class="main">
+					<div class="bg-1">
+						<h1><a href="/">Rock Band</a></h1>
+					</div>
+{{template "nav" $}}
+				</div>
+			</header>
+<!--==============================content================================-->
+			<section id="content"><div class="ic">More Website Templates @ TemplateMonster.com. November 21, 2011!</div>
+				<div class="main">
+					<div class="content-padding-2">
+						<div class="container_12">
+							<div class="wrapper">
+								<div class="grid_8">
+									<div class="padding-grid-1">
+										<h3>Show <strong>Dates</strong></h3>
+									</div>	
+									<div class="wrapper">
+										{{$dates := (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, city, venue, notes from shows where date >= current_date order by date asc limit 10`)}}
+										<article class="grid_4 alpha">
+											<div class="padding-grid-1">
+											{{range $i, $date := $dates}}
+												<div class="wrapper{{if (lt $i (sub (len $dates) 1))}} img-indent-bot2{{end}}">
+													<time class="time time-stule-2" datetime="{{$date.date}}"> <strong class="text-3">{{$date.day}}</strong><strong class="text-4">{{$date.month}}</strong></time>
+													<div class="extra-wrap">
+														<h4 class="indent-top"><a href="#">{{$date.city}}</a></h4>
+														<strong>{{$date.venue}}:</strong> {{$date.notes}}
+													</div>
+												</div>
+											{{end}}
+											</div>
+										</article>
+										<article class="grid_4 omega">
+											<div class="padding-grid-4">
+											{{range $i, $date := $dates}}
+												<div class="{{if (lt $i (sub (len $dates) 1))}}margin-bot1{{end}}">
+													<span class="text-width">Tickets:</span> <span class="inline"><a class="link" href="#">http://demolink.org/Okedo</a></span>
+													<span class="text-width">Telephone:</span>  <span class="color-1 inline">+1 959 603 6035</span>
+												</div>
+											{{end}}
+											</div>
+										</article>
+									</div>
+								</div>
+<!--
+								<article class="grid_4 alpha">
+									<div class="padding-grid-3">
+										<h3>Past <strong>Tours</strong></h3>
+										<ul class="list-3">
+											<li><a href="#">Lorem ipsum dolor consctetur</a></li>
+											<li><a href="#">Adipisicing eusmod tempor incididunt</a></li>
+											<li><a href="#">Dolore magna aliqua enim ad minim</a></li>
+											<li><a href="#">Quis nostrud exercitation ullamco laboris</a></li>
+											<li><a href="#">Nisi ut aliquip ex ea commodo</a></li>
+											<li><a href="#">Duis aute irure dolor in reprehenderit</a></li>
+											<li><a href="#">Coluptate velit esse cillum</a></li>
+											<li><a href="#">Dolore eu fugiat nulla pariatur</a></li>
+											<li><a href="#">Excepteur sint occaecat cupidatat</a></li>
+											<li><a href="#">Sunt in culpa qui officia</a></li>
+											<li><a href="#">Deserunt mollit anim id est laborum</a></li>
+										</ul>
+									</div>
+								</article>
+-->	
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="block"></div>
+			</section>
+		</div>
+{{template "footer" $}}
+	</body>
+</html>
+{{end}}

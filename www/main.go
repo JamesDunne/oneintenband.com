@@ -30,6 +30,14 @@ var (
 
 func html_path() string { return base_folder + "/html" }
 
+func error_log(fmt string, args ...interface{}) {
+	log.Printf(fmt, args...)
+}
+
+func weberror_log(req *http.Request, werr *web.WebError) {
+	log.Printf("%3d %s %s ERROR %s\n", werr.StatusCode, req.Method, req.URL, werr.Error.Error())
+}
+
 func verbose_log(fmt string, args ...interface{}) {
 	if !verbose {
 		return
@@ -50,7 +58,7 @@ func main() {
 	// Define our commandline flags:
 	fs := flag.String("fs", ".", "Root directory of served files and templates")
 	fl_listen_uri := flag.String("l", "tcp://0.0.0.0:8080", "listen URI (schemes available are tcp, unix)")
-	flag.BoolVar(&verbose, "v", true, "verbose logging")
+	flag.BoolVar(&verbose, "v", false, "verbose logging")
 	flag.BoolVar(&debug, "d", true, "debug logging")
 	flag.Parse()
 
