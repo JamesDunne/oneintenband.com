@@ -48,6 +48,20 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: album; Type: TABLE; Schema: public; Owner: www; Tablespace: 
+--
+
+CREATE TABLE album (
+    album_id integer NOT NULL,
+    date date,
+    title character varying,
+    mix_version integer
+);
+
+
+ALTER TABLE public.album OWNER TO www;
+
+--
 -- Name: news; Type: TABLE; Schema: public; Owner: www; Tablespace: 
 --
 
@@ -72,6 +86,45 @@ CREATE TABLE shows (
 
 
 ALTER TABLE public.shows OWNER TO www;
+
+--
+-- Name: song; Type: TABLE; Schema: public; Owner: www; Tablespace: 
+--
+
+CREATE TABLE song (
+    song_id integer NOT NULL,
+    album_id integer,
+    track integer,
+    title character varying,
+    path character varying
+);
+
+
+ALTER TABLE public.song OWNER TO www;
+
+--
+-- Name: album_pkey; Type: CONSTRAINT; Schema: public; Owner: www; Tablespace: 
+--
+
+ALTER TABLE ONLY album
+    ADD CONSTRAINT album_pkey PRIMARY KEY (album_id);
+
+
+--
+-- Name: song_pkey; Type: CONSTRAINT; Schema: public; Owner: www; Tablespace: 
+--
+
+ALTER TABLE ONLY song
+    ADD CONSTRAINT song_pkey PRIMARY KEY (song_id);
+
+
+--
+-- Name: song_album_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: www
+--
+
+ALTER TABLE ONLY song
+    ADD CONSTRAINT song_album_id_fkey FOREIGN KEY (album_id) REFERENCES album(album_id);
+
 
 --
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
