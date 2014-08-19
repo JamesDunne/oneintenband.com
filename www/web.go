@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"net/http"
 	"path/filepath"
+	"strconv"
 	//"reflect"
 )
 
@@ -15,16 +16,46 @@ import (
 	"github.com/JamesDunne/go-util/web"
 )
 
+func debugfmtArgs(args ...interface{}) string {
+	if len(args) == 0 {
+		return ""
+	}
+
+	sep := ", "
+	n := len(sep) * (len(args) - 1)
+	for i := 0; i < len(args); i++ {
+		n += 20
+		n += (5 + (i / 10) + 1)
+	}
+
+	b := make([]byte, 0, n)
+	buf := bytes.NewBuffer(b)
+	buf.WriteRune('$')
+	buf.WriteString(strconv.FormatInt(int64(1), 10))
+	buf.WriteString(" = ")
+	fmt.Fprintf(buf, "%v", args[0])
+	for i, a := range args[1:] {
+		buf.WriteString(sep)
+		buf.WriteRune('$')
+		buf.WriteString(strconv.FormatInt(int64(1+i+1), 10))
+		buf.WriteString(" = ")
+		fmt.Fprintf(buf, "%v", a)
+	}
+	return buf.String()
+}
+
 func RunQuery(sql string, args ...interface{}) (results []map[string]interface{}, err error) {
-	debug_log("query: %s\n", sql)
 	rows, err := db.Query(sql, args...)
 	if err != nil {
+		debug_log("SQL: %s\nargs: %s\nERROR: %s\n", sql, debugfmtArgs(args...), err.Error())
 		return nil, err
 	}
 	defer rows.Close()
 
 	colNames, err := rows.Columns()
-	debug_log("colnames: %s\n", colNames)
+	if err != nil {
+		return nil, err
+	}
 
 	results = make([]map[string]interface{}, 0, 10)
 
@@ -58,6 +89,7 @@ func RunQuery(sql string, args ...interface{}) (results []map[string]interface{}
 		results = append(results, colMap)
 	}
 
+	debug_log("SQL: %s\nargs: %s\ncolumns: %s\nrows: %d\n", sql, debugfmtArgs(args...), colNames, len(results))
 	return results, nil
 }
 
