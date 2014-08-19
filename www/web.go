@@ -90,7 +90,7 @@ func uiTemplatesPreParse(tmpl *template.Template) *template.Template {
 }
 
 // Handles all web requests:
-func requestHandler(rsp http.ResponseWriter, req *http.Request) {
+func requestHandler(rsp http.ResponseWriter, req *http.Request) (werr *web.Error) {
 	// Set RemoteAddr for forwarded requests:
 	{
 		ip := req.Header.Get("X-Real-IP")
@@ -107,42 +107,41 @@ func requestHandler(rsp http.ResponseWriter, req *http.Request) {
 	// HACK(jsd): Temporary solution to serve static files.
 	if staticPath, ok := web.MatchSimpleRouteRaw(req.URL.Path, "/static/"); ok {
 		http.ServeFile(rsp, req, filepath.Join("../static/", staticPath))
+		return nil
+	} else if req.URL.Path == "/favicon.ico" {
+		return web.NewError(nil, http.StatusNoContent, web.Empty)
+	}
+
+	// Decide which template to execute:
+	templateName := req.URL.Path[1:]
+	if templateName == "" {
+		templateName = "index"
+	}
+
+	verbose_log("templateName: '%s'\n", templateName)
+
+	// Create a buffer to write a response to:
+	bufWriter := bytes.NewBuffer(make([]byte, 0, 16384))
+
+	// Execute the named template:
+	model := struct {
+		Static   string
+		Template string
+	}{
+		Static:   "/static",
+		Template: templateName,
+	}
+	err := uiTmpl.ExecuteTemplate(bufWriter, templateName, model)
+	werr = web.AsErrorHTML(err, http.StatusInternalServerError)
+	if werr != nil {
 		return
 	}
 
-	web.HTML(web.Log(web.DefaultWebErrorLog, web.WebErrorHandlerFunc(func(rsp http.ResponseWriter, req *http.Request) (werr *web.WebError) {
-		// Decide which template to execute:
-		templateName := req.URL.Path[1:]
-		if templateName == "" {
-			templateName = "index"
-		}
-
-		verbose_log("templateName: '%s'\n", templateName)
-
-		// Create a buffer to write a response to:
-		bufWriter := bytes.NewBuffer(make([]byte, 0, 16384))
-
-		// Execute the named template:
-		model := struct {
-			Static   string
-			Template string
-		}{
-			Static:   "/static",
-			Template: templateName,
-		}
-		err := uiTmpl.ExecuteTemplate(bufWriter, templateName, model)
-		werr = web.AsWebError(err, http.StatusInternalServerError)
-		if werr != nil {
-			return
-		}
-
-		// Write the buffer's contents to the HTTP response:
-		_, err = bufWriter.WriteTo(rsp)
-		werr = web.AsWebError(err, http.StatusInternalServerError)
-		if werr != nil {
-			return
-		}
+	// Write the buffer's contents to the HTTP response:
+	_, err = bufWriter.WriteTo(rsp)
+	werr = web.AsErrorHTML(err, http.StatusInternalServerError)
+	if werr != nil {
 		return
-	}))).ServeHTTP(rsp, req)
+	}
 	return
 }

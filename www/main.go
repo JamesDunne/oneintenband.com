@@ -34,10 +34,6 @@ func error_log(fmt string, args ...interface{}) {
 	log.Printf(fmt, args...)
 }
 
-func weberror_log(req *http.Request, werr *web.WebError) {
-	log.Printf("%3d %s %s ERROR %s\n", werr.StatusCode, req.Method, req.URL, werr.Error.Error())
-}
-
 func verbose_log(fmt string, args ...interface{}) {
 	if !verbose {
 		return
@@ -86,7 +82,7 @@ func main() {
 
 	// Start the server:
 	_, err = base.ServeMain(listen_addr, func(l net.Listener) error {
-		return http.Serve(l, http.HandlerFunc(requestHandler))
+		return http.Serve(l, web.ReportErrors(web.Log(web.DefaultErrorLog, web.ErrorHandlerFunc(requestHandler))))
 	})
 	if err != nil {
 		log.Println(err)
