@@ -18,17 +18,17 @@ import (
 )
 
 const (
-	dbConnectionString = "host=localhost sslmode=disable user=www password=band dbname=oneintenband "
+	dbConnectionString = "host=localhost sslmode=disable dbname=band user=band password=band"
 )
 
 var (
-	base_folder = ""
+	html_folder = ""
 	verbose     = false
 	debug       = false
 	db          *sql.DB
 )
 
-func html_path() string { return base_folder + "/html" }
+func html_path() string { return html_folder }
 
 func error_log(fmt string, args ...interface{}) {
 	log.Printf(fmt, args...)
@@ -52,18 +52,18 @@ var uiTmpl *template.Template
 
 func main() {
 	// Define our commandline flags:
-	fs := flag.String("fs", ".", "Root directory of served files and templates")
+	flag.StringVar(&html_folder, "html", "./html", "Directory of HTML template files")
 	fl_listen_uri := flag.String("l", "tcp://0.0.0.0:8080", "listen URI (schemes available are tcp, unix)")
 	flag.BoolVar(&verbose, "v", false, "verbose logging")
-	flag.BoolVar(&debug, "d", true, "debug logging")
+	flag.BoolVar(&debug, "d", false, "debug logging")
 	flag.Parse()
 
 	// Parse all the URIs:
 	listen_addr, err := base.ParseListenable(*fl_listen_uri)
 	base.PanicIf(err)
 
-	// Make directories we need:
-	base_folder = base.CanonicalPath(path.Clean(*fs))
+	// Clean paths:
+	html_folder = base.CanonicalPath(path.Clean(html_folder))
 
 	// Open database:
 	db, err = sql.Open("postgres", dbConnectionString)
