@@ -1,2 +1,5 @@
+.DS_Store
+demos/demos
 www/www
-
+template/*
+*.zip
