@@ -10,15 +10,15 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- Name: oneintenband; Type: DATABASE; Schema: -; Owner: postgres
+-- Name: band; Type: DATABASE; Schema: -; Owner: postgres
 --
 
-CREATE DATABASE oneintenband WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'C' LC_CTYPE = 'C';
+CREATE DATABASE band WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'C' LC_CTYPE = 'C';
 
 
-ALTER DATABASE oneintenband OWNER TO postgres;
+ALTER DATABASE band OWNER TO postgres;
 
-\connect oneintenband
+\connect band
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -44,7 +44,7 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 SET search_path = public, pg_catalog;
 
 --
--- Name: album_id; Type: SEQUENCE; Schema: public; Owner: www
+-- Name: album_id; Type: SEQUENCE; Schema: public; Owner: band
 --
 
 CREATE SEQUENCE album_id
@@ -55,14 +55,14 @@ CREATE SEQUENCE album_id
     CACHE 1;
 
 
-ALTER TABLE public.album_id OWNER TO www;
+ALTER TABLE public.album_id OWNER TO band;
 
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
--- Name: album; Type: TABLE; Schema: public; Owner: www; Tablespace: 
+-- Name: album; Type: TABLE; Schema: public; Owner: band; Tablespace: 
 --
 
 CREATE TABLE album (
@@ -74,10 +74,10 @@ CREATE TABLE album (
 );
 
 
-ALTER TABLE public.album OWNER TO www;
+ALTER TABLE public.album OWNER TO band;
 
 --
--- Name: album_mix_id; Type: SEQUENCE; Schema: public; Owner: www
+-- Name: album_mix_id; Type: SEQUENCE; Schema: public; Owner: band
 --
 
 CREATE SEQUENCE album_mix_id
@@ -88,10 +88,10 @@ CREATE SEQUENCE album_mix_id
     CACHE 1;
 
 
-ALTER TABLE public.album_mix_id OWNER TO www;
+ALTER TABLE public.album_mix_id OWNER TO band;
 
 --
--- Name: album_mix; Type: TABLE; Schema: public; Owner: www; Tablespace: 
+-- Name: album_mix; Type: TABLE; Schema: public; Owner: band; Tablespace: 
 --
 
 CREATE TABLE album_mix (
@@ -101,10 +101,10 @@ CREATE TABLE album_mix (
 );
 
 
-ALTER TABLE public.album_mix OWNER TO www;
+ALTER TABLE public.album_mix OWNER TO band;
 
 --
--- Name: news; Type: TABLE; Schema: public; Owner: www; Tablespace: 
+-- Name: news; Type: TABLE; Schema: public; Owner: band; Tablespace: 
 --
 
 CREATE TABLE news (
@@ -113,10 +113,10 @@ CREATE TABLE news (
 );
 
 
-ALTER TABLE public.news OWNER TO www;
+ALTER TABLE public.news OWNER TO band;
 
 --
--- Name: page; Type: TABLE; Schema: public; Owner: www; Tablespace: 
+-- Name: page; Type: TABLE; Schema: public; Owner: band; Tablespace: 
 --
 
 CREATE TABLE page (
@@ -128,10 +128,10 @@ CREATE TABLE page (
 );
 
 
-ALTER TABLE public.page OWNER TO www;
+ALTER TABLE public.page OWNER TO band;
 
 --
--- Name: shows; Type: TABLE; Schema: public; Owner: www; Tablespace: 
+-- Name: shows; Type: TABLE; Schema: public; Owner: band; Tablespace: 
 --
 
 CREATE TABLE shows (
@@ -142,10 +142,10 @@ CREATE TABLE shows (
 );
 
 
-ALTER TABLE public.shows OWNER TO www;
+ALTER TABLE public.shows OWNER TO band;
 
 --
--- Name: song_id; Type: SEQUENCE; Schema: public; Owner: www
+-- Name: song_id; Type: SEQUENCE; Schema: public; Owner: band
 --
 
 CREATE SEQUENCE song_id
@@ -156,10 +156,10 @@ CREATE SEQUENCE song_id
     CACHE 1;
 
 
-ALTER TABLE public.song_id OWNER TO www;
+ALTER TABLE public.song_id OWNER TO band;
 
 --
--- Name: song; Type: TABLE; Schema: public; Owner: www; Tablespace: 
+-- Name: song; Type: TABLE; Schema: public; Owner: band; Tablespace: 
 --
 
 CREATE TABLE song (
@@ -172,10 +172,10 @@ CREATE TABLE song (
 );
 
 
-ALTER TABLE public.song OWNER TO www;
+ALTER TABLE public.song OWNER TO band;
 
 --
--- Name: album_mix_pkey; Type: CONSTRAINT; Schema: public; Owner: www; Tablespace: 
+-- Name: album_mix_pkey; Type: CONSTRAINT; Schema: public; Owner: band; Tablespace: 
 --
 
 ALTER TABLE ONLY album_mix
@@ -183,7 +183,7 @@ ALTER TABLE ONLY album_mix
 
 
 --
--- Name: album_pkey; Type: CONSTRAINT; Schema: public; Owner: www; Tablespace: 
+-- Name: album_pkey; Type: CONSTRAINT; Schema: public; Owner: band; Tablespace: 
 --
 
 ALTER TABLE ONLY album
@@ -191,7 +191,7 @@ ALTER TABLE ONLY album
 
 
 --
--- Name: page_headorder_key; Type: CONSTRAINT; Schema: public; Owner: www; Tablespace: 
+-- Name: page_headorder_key; Type: CONSTRAINT; Schema: public; Owner: band; Tablespace: 
 --
 
 ALTER TABLE ONLY page
@@ -199,7 +199,7 @@ ALTER TABLE ONLY page
 
 
 --
--- Name: song_pkey; Type: CONSTRAINT; Schema: public; Owner: www; Tablespace: 
+-- Name: song_pkey; Type: CONSTRAINT; Schema: public; Owner: band; Tablespace: 
 --
 
 ALTER TABLE ONLY song
@@ -207,7 +207,7 @@ ALTER TABLE ONLY song
 
 
 --
--- Name: album_mix_album_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: www
+-- Name: album_mix_album_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: band
 --
 
 ALTER TABLE ONLY album_mix
@@ -215,7 +215,7 @@ ALTER TABLE ONLY album_mix
 
 
 --
--- Name: song_album_mix_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: www
+-- Name: song_album_mix_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: band
 --
 
 ALTER TABLE ONLY song
@@ -233,12 +233,12 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
--- Name: news; Type: ACL; Schema: public; Owner: www
+-- Name: news; Type: ACL; Schema: public; Owner: band
 --
 
 REVOKE ALL ON TABLE news FROM PUBLIC;
-REVOKE ALL ON TABLE news FROM www;
-GRANT ALL ON TABLE news TO www;
+REVOKE ALL ON TABLE news FROM band;
+GRANT ALL ON TABLE news TO band;
 
 
 --
