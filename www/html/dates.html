@@ -25,7 +25,7 @@
 										<h3>Show <strong>Dates</strong></h3>
 									</div>	
 									<div class="wrapper">
-										{{$dates := (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, city, venue, notes from shows where date >= current_date order by date asc limit 10`)}}
+										{{$dates := (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, city, venue, notes from show where date >= current_date order by date asc limit 10`)}}
 										<article class="grid_4 alpha">
 											<div class="padding-grid-1">
 											{{range $i, $date := $dates}}
@@ -42,10 +42,10 @@
 										<article class="grid_4 omega">
 											<div class="padding-grid-4">
 											{{range $i, $date := $dates}}
-												<div class="{{if (lt $i (sub (len $dates) 1))}}margin-bot1{{end}}">
+												<div class="{{if (lt $i (sub (len $dates) 1))}}margin-bot1{{end}}"><!--
 													<span class="text-width">Tickets:</span> <span class="inline"><a class="link" href="#">http://demolink.org/Okedo</a></span>
 													<span class="text-width">Telephone:</span>  <span class="color-1 inline">+1 959 603 6035</span>
-												</div>
+												--></div>
 											{{end}}
 											</div>
 										</article>

@@ -61,7 +61,7 @@
 									<article class="grid_4 alpha">
 										<div class="padding-grid-1">
 											<h3>Show <strong>Dates</strong></h3>
-											{{range (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, city, venue, notes from shows where date >= current_date order by date asc limit 3`)}}
+											{{range (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, city, venue, notes from show where date >= current_date order by date asc limit 3`)}}
 											<div class="wrapper img-indent-bot2">
 												<time class="time time-stule-2" datetime="{{.date}}"> <strong class="text-3">{{.day}}</strong><strong class="text-4">{{.month}}</strong></time>
 												<div class="extra-wrap">
@@ -74,9 +74,9 @@
 									</article>
 									<article class="grid_4 alpha">
 										<div class="padding-grid-2">
-											<h3 class="letter">Something <strong>Here!</strong></h3>
+											<h3 class="letter">Latest <strong>Recordings</strong></h3>
 											<div class="wrapper">
-												<figure class="style-img fleft"><a href="#"><img src="{{$.Static}}/images/page1-img1.jpg"  alt=""></a></figure>
+												<figure class="style-img fleft"><a href="/audio"><img src="{{$.Static}}/images/page1-img1.jpg"  alt=""></a></figure>
 											</div>
 										</div>
 									</article>
@@ -120,8 +120,8 @@
 								<article class="grid_4 alpha">
 									<div class="padding-grid-2">
 										<h3 class="letter prev-indent-bot1">Shortly <strong>About</strong></h3>
-										<h6>Sed ut perspiciatis unde omnis</h6>
-										Iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas aspernatur.
+										<h6>Who are we?</h6>
+                                        We are a '90s alternative rock cover band from the northwest Chicago suburbs.
 									</div>
 								</article>
 							</div>

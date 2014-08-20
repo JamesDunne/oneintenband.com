@@ -97,9 +97,14 @@ h1 {
 	position:relative;
 }
 h1 a {
-	display:block; 
-	width:246px; 
-	height:62px; 
+	display:block;
+	width:246px;
+	height:62px;
+
+    font-size: 3em;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: bottom;
 /*
 	text-indent:-5000px; 
 	background:url(../images/logo.png) 0 0 no-repeat;
