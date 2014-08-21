@@ -131,10 +131,10 @@ CREATE TABLE page (
 ALTER TABLE public.page OWNER TO band;
 
 --
--- Name: shows; Type: TABLE; Schema: public; Owner: band; Tablespace: 
+-- Name: show; Type: TABLE; Schema: public; Owner: band; Tablespace: 
 --
 
-CREATE TABLE shows (
+CREATE TABLE show (
     date timestamp without time zone,
     venue character varying,
     notes character varying,
@@ -142,7 +142,7 @@ CREATE TABLE shows (
 );
 
 
-ALTER TABLE public.shows OWNER TO band;
+ALTER TABLE public.show OWNER TO band;
 
 --
 -- Name: song_id; Type: SEQUENCE; Schema: public; Owner: band

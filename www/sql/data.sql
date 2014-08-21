@@ -49,9 +49,7 @@ SELECT pg_catalog.setval('album_mix_id', 1, false);
 --
 
 COPY news (date, contents) FROM stdin;
-2014-08-22	Our first show!
-2014-09-01	Unknown event!
-2014-09-08	Link <a href="/">here</a>.
+2014-08-20	Come see our first show!
 \.
 
 
@@ -70,11 +68,11 @@ dates	Show Dates	5	f	/dates
 
 
 --
--- Data for Name: shows; Type: TABLE DATA; Schema: public; Owner: band
+-- Data for Name: show; Type: TABLE DATA; Schema: public; Owner: band
 --
 
-COPY shows (date, venue, notes, city) FROM stdin;
-2014-08-22 19:30:00	Penny Road Pub	Come see our first show!	Barrington, IL
+COPY show (date, venue, notes, city) FROM stdin;
+2014-08-22 19:30:00	Penny Road Pub	Our first show!	Barrington, IL
 \.
 
 
