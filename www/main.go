@@ -23,6 +23,7 @@ const (
 
 var (
 	html_folder = ""
+	staticHref  = ""
 	verbose     = false
 	debug       = false
 	db          *sql.DB
@@ -53,6 +54,7 @@ var uiTmpl *template.Template
 func main() {
 	// Define our commandline flags:
 	flag.StringVar(&html_folder, "html", "./html", "Directory of HTML template files")
+	flag.StringVar(&staticHref, "static", "static/", "HREF prefix to static files")
 	fl_listen_uri := flag.String("l", "tcp://0.0.0.0:8080", "listen URI (schemes available are tcp, unix)")
 	flag.BoolVar(&verbose, "v", false, "verbose logging")
 	flag.BoolVar(&debug, "d", false, "debug logging")

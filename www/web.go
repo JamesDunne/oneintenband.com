@@ -160,7 +160,7 @@ func requestHandler(rsp http.ResponseWriter, req *http.Request) (werr *web.Error
 		Static   string
 		Template string
 	}{
-		Static:   "/static",
+		Static:   staticHref,
 		Template: templateName,
 	}
 	err := uiTmpl.ExecuteTemplate(bufWriter, templateName, model)
