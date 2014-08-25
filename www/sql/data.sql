@@ -16,7 +16,7 @@ SET search_path = public, pg_catalog;
 --
 
 COPY album (album_id, date, title, description, best_album_mix_id) FROM stdin;
-1	2014-08-09	Demo Reel	\N	1
+1	2014-07-09	Demo Reel	\N	3
 \.
 
 
@@ -34,6 +34,7 @@ SELECT pg_catalog.setval('album_id', 1, false);
 COPY album_mix (album_mix_id, album_id, mix_name) FROM stdin;
 1	1	8a
 2	1	9c
+3	1	10
 \.
 
 
@@ -41,7 +42,7 @@ COPY album_mix (album_mix_id, album_id, mix_name) FROM stdin;
 -- Name: album_mix_id; Type: SEQUENCE SET; Schema: public; Owner: band
 --
 
-SELECT pg_catalog.setval('album_mix_id', 1, false);
+SELECT pg_catalog.setval('album_mix_id', 3, true);
 
 
 --
@@ -80,19 +81,25 @@ COPY show (date, venue, notes, city) FROM stdin;
 -- Data for Name: song; Type: TABLE DATA; Schema: public; Owner: band
 --
 
-COPY song (song_id, album_mix_id, title, href, track, artist) FROM stdin;
-2	1	Song 2	\N	1	Blur
-3	1	Brainstew	\N	2	Green Day
-4	1	Zero	\N	3	Smashing Pumpkins
-5	1	Hash Pipe	\N	4	Weezer
-6	1	Plush	\N	5	STP
-7	1	Everything Zen	\N	6	Bush
-8	2	Song 2	\N	1	Blur
-9	2	Brainstew	\N	2	Green Day
-10	2	Zero	\N	3	Smashing Pumpkins
-11	2	Hash Pipe	\N	4	Weezer
-12	2	Plush	\N	5	STP
-13	2	Everything Zen	\N	6	Bush
+COPY song (song_id, album_mix_id, title, track, artist) FROM stdin;
+2	1	Song 2	1	Blur
+3	1	Brainstew	2	Green Day
+4	1	Zero	3	Smashing Pumpkins
+5	1	Hash Pipe	4	Weezer
+6	1	Plush	5	STP
+7	1	Everything Zen	6	Bush
+8	2	Song 2	1	Blur
+9	2	Brainstew	2	Green Day
+10	2	Zero	3	Smashing Pumpkins
+11	2	Hash Pipe	4	Weezer
+12	2	Plush	5	STP
+13	2	Everything Zen	6	Bush
+14	3	Song 2	1	Blur
+15	3	Brainstew	2	Green Day
+16	3	Zero	3	Smashing Pumpkins
+17	3	Hash Pipe	4	Weezer
+18	3	Plush	5	STP
+19	3	Everything Zen	6	Bush
 \.
 
 
@@ -100,7 +107,7 @@ COPY song (song_id, album_mix_id, title, href, track, artist) FROM stdin;
 -- Name: song_id; Type: SEQUENCE SET; Schema: public; Owner: band
 --
 
-SELECT pg_catalog.setval('song_id', 13, true);
+SELECT pg_catalog.setval('song_id', 19, true);
 
 
 --

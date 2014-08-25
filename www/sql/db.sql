@@ -166,7 +166,6 @@ CREATE TABLE song (
     song_id integer DEFAULT nextval('song_id'::regclass) NOT NULL,
     album_mix_id integer NOT NULL,
     title character varying,
-    href character varying,
     track integer,
     artist character varying
 );
