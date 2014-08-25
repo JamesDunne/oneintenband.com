@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"net/url"
 	"path/filepath"
 	"strconv"
 	//"reflect"
@@ -109,6 +110,10 @@ var templateFunctions template.FuncMap = template.FuncMap(map[string]interface{}
 			return s.String(), nil
 		}
 		return "", fmt.Errorf("Cannot stringify!")
+	},
+	// URI-escape a string:
+	"uri": func(a string) string {
+		return url.QueryEscape(a)
 	},
 	"html": func(a string) template.HTML {
 		return template.HTML(a)
