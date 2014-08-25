@@ -118,6 +118,7 @@ var templateFunctions template.FuncMap = template.FuncMap(map[string]interface{}
 
 // Pre-parse step to process HTML templates and add functions for templates to execute:
 func uiTemplatesPreParse(tmpl *template.Template) *template.Template {
+	log_info("Parsing HTML template files\n")
 	return tmpl.Funcs(templateFunctions)
 }
 
@@ -134,7 +135,7 @@ func requestHandler(rsp http.ResponseWriter, req *http.Request) (werr *web.Error
 		}
 	}
 
-	verbose_log("%s %s\n", req.Method, req.URL)
+	log_verbose("%s %s\n", req.Method, req.URL)
 
 	// HACK(jsd): Temporary solution to serve static files.
 	if staticPath, ok := web.MatchSimpleRouteRaw(req.URL.Path, "/static/"); ok {
@@ -150,7 +151,7 @@ func requestHandler(rsp http.ResponseWriter, req *http.Request) (werr *web.Error
 		templateName = "index"
 	}
 
-	verbose_log("templateName: '%s'\n", templateName)
+	log_verbose("templateName: '%s'\n", templateName)
 
 	// Create a buffer to write a response to:
 	bufWriter := bytes.NewBuffer(make([]byte, 0, 16384))

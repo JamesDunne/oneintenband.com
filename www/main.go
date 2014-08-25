@@ -31,11 +31,11 @@ var (
 
 func html_path() string { return html_folder }
 
-func error_log(fmt string, args ...interface{}) {
+func log_info(fmt string, args ...interface{}) {
 	log.Printf(fmt, args...)
 }
 
-func verbose_log(fmt string, args ...interface{}) {
+func log_verbose(fmt string, args ...interface{}) {
 	if !verbose {
 		return
 	}
@@ -54,7 +54,7 @@ var uiTmpl *template.Template
 func main() {
 	// Define our commandline flags:
 	flag.StringVar(&html_folder, "html", "./html", "Directory of HTML template files")
-	flag.StringVar(&staticHref, "static", "static/", "HREF prefix to static files")
+	flag.StringVar(&staticHref, "static", "static", "HREF prefix to static files")
 	fl_listen_uri := flag.String("l", "tcp://0.0.0.0:8080", "listen URI (schemes available are tcp, unix)")
 	flag.BoolVar(&verbose, "v", false, "verbose logging")
 	flag.BoolVar(&debug, "d", false, "debug logging")
