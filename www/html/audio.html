@@ -24,7 +24,7 @@
 									<div class="padding-grid-1">
 										<h3 class="letter">Our <strong>Discography</strong></h3>
 									</div>
-									{{$albums := (query `select a.album_id, to_char(a.date, 'YYYY') as year, a.title, a.description, a.best_album_mix_id, m.mix_name from album a, album_mix m where a.best_album_mix_id = m.album_mix_id order by a.date desc`)}}
+									{{$albums := (query `select a.album_id, to_char(a.date, 'YYYY-MM-DD') as date, to_char(a.date, 'YYYY') as year, a.title, a.description, a.best_album_mix_id, m.mix_name from album a, album_mix m where a.best_album_mix_id = m.album_mix_id order by a.date desc`)}}
 									{{range $i, $album := $albums}}
 									<div class="wrapper{{if (lt $i (sub (len $albums) 1))}} p3{{end}}">
 										<article class="grid_4 alpha">
@@ -39,10 +39,10 @@
 												<h4 class="margin-none indent-top1"><strong>{{$album.year}}.</strong>  {{$album.title}}{{with $album.mix_name}} (mix {{.}}){{end}}</h4>
 												<p class="prev-indent-bot">{{html (string $album.description)}}</p>
 												<div class="wrapper">
-													{{$songs := (query `select to_char(track, '00') as track, title, artist, href from song where album_mix_id = $1` $album.best_album_mix_id)}}
+												{{$songs := (query `select to_char(track, 'FM00') as track, title, artist from song where album_mix_id = $1` $album.best_album_mix_id)}}
 													<ul class="list-1 fleft">
 													{{range $songs}}
-														<li><a href="{{with .href}}{{.}}{{else}}#{{end}}">{{.track}}. {{.title}}{{with .artist}}  // {{.}}{{end}}</a></li>
+														<li><a href="//mp3.oneintenband.com/{{ (printf "%s/%s/%s - %s.mp3" $album.date $album.mix_name .track .title) }}">{{.track}}. {{.title}}{{with .artist}}  // {{.}}{{end}}</a></li>
 													{{end}}
 													</ul>
 													<ul class="list-2 fright">
