@@ -29,7 +29,7 @@ var (
 	db          *sql.DB
 )
 
-func html_path() string { return html_folder }
+func html_path() string { return base.CanonicalPath(path.Clean(html_folder)) }
 
 func log_info(fmt string, args ...interface{}) {
 	log.Printf(fmt, args...)
@@ -63,9 +63,6 @@ func main() {
 	// Parse all the URIs:
 	listen_addr, err := base.ParseListenable(*fl_listen_uri)
 	base.PanicIf(err)
-
-	// Clean paths:
-	html_folder = base.CanonicalPath(path.Clean(html_folder))
 
 	// Open database:
 	db, err = sql.Open("postgres", dbConnectionString)
