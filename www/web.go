@@ -176,7 +176,7 @@ func requestHandler(rsp http.ResponseWriter, req *http.Request) (werr *web.Error
 	// Create a buffer to output the generated template to:
 	bufWriter := bytes.NewBuffer(make([]byte, 0, 16384))
 
-	// Execute the named template:
+	// Execute the named template and output to the buffer:
 	model := struct {
 		Static   string
 		Template string
@@ -189,6 +189,7 @@ func requestHandler(rsp http.ResponseWriter, req *http.Request) (werr *web.Error
 		// Flatten the query map of `[]string` values to `string` values:
 		Query: flatten(req.URL.Query()),
 	}
+
 	err := uiTmpl.ExecuteTemplate(bufWriter, templateName, model)
 	werr = web.AsErrorHTML(err, http.StatusInternalServerError)
 	if werr != nil {
