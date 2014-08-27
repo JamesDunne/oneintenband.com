@@ -165,11 +165,12 @@ func requestHandler(rsp http.ResponseWriter, req *http.Request) (werr *web.Error
 
 	// Parse URL route:
 	route := strings.Split(req.URL.Path[1:], "/")
+	log_verbose("route: %v\n", route)
 
 	// Use first part of route as name of template to execute:
-	templateName := "index"
-	if len(route) > 0 {
-		templateName = strings.ToLower(route[0])
+	templateName := strings.ToLower(route[0])
+	if templateName == "" {
+		templateName = "index"
 	}
 	log_verbose("templateName: '%s'\n", templateName)
 

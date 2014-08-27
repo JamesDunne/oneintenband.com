@@ -29,7 +29,7 @@ var (
 	db          *sql.DB
 )
 
-func html_path() string { return base.CanonicalPath(path.Clean(html_folder)) }
+func html_path() string { return base.CanonicalSymlinkPath(path.Clean(html_folder)) }
 
 func log_info(fmt string, args ...interface{}) {
 	log.Printf(fmt, args...)
