@@ -16,7 +16,7 @@ SET search_path = public, pg_catalog;
 --
 
 COPY album (album_id, date, title, description, best_album_mix_id) FROM stdin;
-1	2014-07-09	Demo Reel	\N	3
+1	2014-07-09	Demo Reel	\N	4
 \.
 
 
@@ -35,6 +35,7 @@ COPY album_mix (album_mix_id, album_id, mix_name) FROM stdin;
 1	1	8a
 2	1	9c
 3	1	10
+4	1	12
 \.
 
 
@@ -42,7 +43,7 @@ COPY album_mix (album_mix_id, album_id, mix_name) FROM stdin;
 -- Name: album_mix_id; Type: SEQUENCE SET; Schema: public; Owner: band
 --
 
-SELECT pg_catalog.setval('album_mix_id', 3, true);
+SELECT pg_catalog.setval('album_mix_id', 4, true);
 
 
 --
@@ -100,6 +101,12 @@ COPY song (song_id, album_mix_id, title, track, artist) FROM stdin;
 17	3	Hash Pipe	4	Weezer
 18	3	Plush	5	STP
 19	3	Everything Zen	6	Bush
+20	4	Song 2	1	Blur
+21	4	Brainstew	2	Green Day
+22	4	Zero	3	Smashing Pumpkins
+23	4	Hash Pipe	4	Weezer
+24	4	Plush	5	STP
+25	4	Everything Zen	6	Bush
 \.
 
 
@@ -107,7 +114,7 @@ COPY song (song_id, album_mix_id, title, track, artist) FROM stdin;
 -- Name: song_id; Type: SEQUENCE SET; Schema: public; Owner: band
 --
 
-SELECT pg_catalog.setval('song_id', 19, true);
+SELECT pg_catalog.setval('song_id', 25, true);
 
 
 --
