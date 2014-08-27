@@ -4,9 +4,11 @@
 	<head>
 		<title>One in Ten - audio</title>
 {{template "head" $}}
+		<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script type="text/javascript" src="{{$.Static}}/jp/jquery.jplayer.min.js"></script>
+		<script type="text/javascript" src="{{$.Static}}/jp/jplayer.playlist.min.js"></script>
 	</head>
 	<body>
-	<body id="page1">
 		<div class="extra">
 			<header>
 				<div class="main">
@@ -20,10 +22,33 @@
 					<div class="content-padding-2">
 						<div class="container_12">
 							<div class="wrapper">
-								<div class="grid_12">
+								<div id="jplayer"></div>
+								<div id="tracks" class="grid_12">
 									<div class="padding-grid-1">
 										<h3 class="letter">Our <strong>Discography</strong></h3>
 									</div>
+
+									<!-- jplayer: -->
+									<p>
+										<span class="play-state"></span> :
+										<span class="track-name">nothing</span>
+										at <span class="extra-play-info"></span>
+										of <span class="jp-duration"></span>, which is
+										<span class="jp-current-time"></span>
+									</p>
+									<ul>
+										<li><a class="jp-play" href="#">Play</a></li>
+										<li><a class="jp-pause" href="#">Pause</a></li>
+										<li><a class="jp-stop" href="#">Stop</a></li>
+									</ul>
+									<ul>
+										<li>volume :</li>
+										<li><a class="jp-mute" href="#">Mute</a></li>
+										<li><a class="jp-unmute" href="#">Unmute</a></li>
+										<li> <a class="jp-volume-bar" href="#">|&lt;----------&gt;|</a></li>
+										<li><a class="jp-volume-max" href="#">Max</a></li>
+									</ul>
+
 									{{$albums := (query `select a.album_id, to_char(a.date, 'YYYY-MM-DD') as date, to_char(a.date, 'YYYY') as year, a.title, a.description, a.best_album_mix_id, m.mix_name from album a, album_mix m where a.best_album_mix_id = m.album_mix_id order by a.date desc`)}}
 									{{range $i, $album := $albums}}
 									<div class="wrapper{{if (lt $i (sub (len $albums) 1))}} p3{{end}}">
@@ -42,12 +67,7 @@
 												{{$songs := (query `select to_char(track, 'FM00') as track, title, artist from song where album_mix_id = $1` $album.best_album_mix_id)}}
 													<ul class="list-1 fleft">
 													{{range $songs}}
-														<li><a href="//mp3.oneintenband.com/{{ (printf "%s/%s/%s - %s.mp3" $album.date $album.mix_name .track .title) }}">{{.track}}. {{.title}}{{with .artist}}  // {{.}}{{end}}</a></li>
-													{{end}}
-													</ul>
-													<ul class="list-2 fright">
-													{{range $songs}}
-														<li><span><a class="left-list" href="#"></a></span><a class="right-list" href="#"></a></li>
+														<li><a class="track" href="//mp3.oneintenband.com/{{ (printf "%s/%s/%s - %s.mp3" $album.date $album.mix_name .track .title) }}">{{.track}}. {{.title}}{{with .artist}}  // {{.}}{{end}}</a></li>
 													{{end}}
 													</ul>
 												</div>
@@ -64,6 +84,73 @@
 			</section>
 		</div>
 {{template "footer" $}}
+		<script type="text/javascript">
+	$(function() {
+		var jp = $("#jplayer"),
+			my_trackName = $("#tracks .track-name"),
+			my_playState = $("#tracks .play-state"),
+			my_extraPlayInfo = $("#tracks .extra-play-info");
+
+		// Some options
+		var	opt_play_first = false, // If true, will attempt to auto-play the default track on page loads. No effect on mobile devices, like iOS.
+			opt_auto_play = true, // If true, when a track is selected, it will auto-play.
+			opt_text_playing = "Now playing", // Text when playing
+			opt_text_selected = "Track selected"; // Text when not playing
+	
+		// A flag to capture the first track
+		var first_track = true;
+	
+		// Change the time format
+		$.jPlayer.timeFormat.padMin = false;
+		$.jPlayer.timeFormat.padSec = false;
+		$.jPlayer.timeFormat.sepMin = " min ";
+		$.jPlayer.timeFormat.sepSec = " sec";
+	
+		// Initialize the play state text
+		my_playState.text(opt_text_selected);
+
+		// Set up jplayer:
+		jp.jPlayer({
+			ready: function () {
+				$("#tracks .track").first().click();
+			},
+			timeupdate: function(event) {
+				my_extraPlayInfo.text(parseInt(event.jPlayer.status.currentPercentAbsolute, 10) + "%");
+			},
+			play: function(event) {
+				my_playState.text(opt_text_playing);
+			},
+			pause: function(event) {
+				my_playState.text(opt_text_selected);
+			},
+			ended: function(event) {
+				my_playState.text(opt_text_selected);
+			},
+			swfPath: "{{$.Static}}/jp/",
+			cssSelectorAncestor: "#tracks",
+			supplied: "mp3",
+			wmode: "window"
+		});
+
+		// Click handler for track link:
+		$("#tracks .track").click(function(e) {
+			e.preventDefault();
+
+			my_trackName.text($(this).text());
+			jp.jPlayer("setMedia", {
+				mp3: $(this).attr("href")
+			});
+
+			if ((opt_play_first && first_track) || (opt_auto_play && !first_track)) {
+				jp.jPlayer("play");
+			}
+			first_track = false;
+
+			$(this).blur();
+			return false;
+		});
+	});
+		</script>
 	</body>
 </html>
 {{end}}

@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"path/filepath"
 	"strconv"
+	"strings"
 	//"reflect"
 )
 
@@ -127,6 +128,18 @@ func uiTemplatesPreParse(tmpl *template.Template) *template.Template {
 	return tmpl.Funcs(templateFunctions)
 }
 
+func flatten(query map[string][]string) (result map[string]string) {
+	result = make(map[string]string)
+	for key, values := range query {
+		if len(values) == 0 {
+			result[key] = ""
+		} else {
+			result[key] = values[0]
+		}
+	}
+	return
+}
+
 // Handles all web requests:
 func requestHandler(rsp http.ResponseWriter, req *http.Request) (werr *web.Error) {
 	// Set RemoteAddr for forwarded requests:
@@ -150,24 +163,31 @@ func requestHandler(rsp http.ResponseWriter, req *http.Request) (werr *web.Error
 		return web.NewError(nil, http.StatusNoContent, web.Empty)
 	}
 
-	// Decide which template to execute:
-	templateName := req.URL.Path[1:]
-	if templateName == "" {
-		templateName = "index"
-	}
+	// Parse URL route:
+	route := strings.Split(req.URL.Path[1:], "/")
 
+	// Use first part of route as name of template to execute:
+	templateName := "index"
+	if len(route) > 0 {
+		templateName = strings.ToLower(route[0])
+	}
 	log_verbose("templateName: '%s'\n", templateName)
 
-	// Create a buffer to write a response to:
+	// Create a buffer to output the generated template to:
 	bufWriter := bytes.NewBuffer(make([]byte, 0, 16384))
 
 	// Execute the named template:
 	model := struct {
 		Static   string
 		Template string
+		Route    []string
+		Query    map[string]string
 	}{
 		Static:   staticHref,
 		Template: templateName,
+		Route:    route,
+		// Flatten the query map of `[]string` values to `string` values:
+		Query: flatten(req.URL.Query()),
 	}
 	err := uiTmpl.ExecuteTemplate(bufWriter, templateName, model)
 	werr = web.AsErrorHTML(err, http.StatusInternalServerError)
