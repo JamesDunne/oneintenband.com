@@ -167,11 +167,21 @@ func requestHandler(rsp http.ResponseWriter, req *http.Request) (werr *web.Error
 	route := strings.Split(req.URL.Path[1:], "/")
 	log_verbose("route: %v\n", route)
 
+	methodLower := strings.ToLower(req.Method)
+	if methodLower != "get" {
+		err := req.ParseForm()
+		if err != nil {
+			return web.AsErrorHTML(err, http.StatusBadRequest)
+		}
+	}
+
 	// Use first part of route as name of template to execute:
 	templateName := strings.ToLower(route[0])
 	if templateName == "" {
 		templateName = "index"
 	}
+
+	templateName = fmt.Sprintf("%s-%s", methodLower, templateName)
 	log_verbose("templateName: '%s'\n", templateName)
 
 	// Create a buffer to output the generated template to:
@@ -179,16 +189,20 @@ func requestHandler(rsp http.ResponseWriter, req *http.Request) (werr *web.Error
 
 	// Execute the named template and output to the buffer:
 	model := struct {
-		Static   string
-		Template string
-		Route    []string
-		Query    map[string]string
+		Static     string
+		Template   string
+		Route      []string
+		Method     string
+		Query      map[string]string
+		FormValues map[string]string
 	}{
 		Static:   staticHref,
 		Template: templateName,
 		Route:    route,
+		Method:   methodLower,
 		// Flatten the query map of `[]string` values to `string` values:
-		Query: flatten(req.URL.Query()),
+		Query:      flatten(req.URL.Query()),
+		FormValues: flatten(req.Form),
 	}
 
 	err := uiTmpl.ExecuteTemplate(bufWriter, templateName, model)
