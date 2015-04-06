@@ -2,10 +2,11 @@
 
 <html lang="en">
 	<head>
-		<title>One in Ten - dates</title>
+		<title>One in Ten - audio</title>
 {{template "head" $}}
 	</head>
 	<body>
+	<body id="page1">
 		<div class="extra">
 			<header>
 				<div class="main">
@@ -24,15 +25,15 @@
 										<h3>Upcoming <strong>Show Dates</strong></h3>
 									</div>	
 									<div class="wrapper">
-									{{$dates := (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, city, venue, notes from show where date >= current_date order by date desc limit 10`)}}
-										<article class="grid_4 alpha">
+									{{$dates := (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, to_char(date, 'HH:MI pm') as time, city, venue, notes from show where date >= current_date order by date desc limit 10`)}}
+										<article class="grid_6 alpha">
 											<div class="padding-grid-1">
 											{{range $i, $date := $dates}}
 												<div class="wrapper{{if (lt $i (sub (len $dates) 1))}} img-indent-bot2{{end}}">
 													<time class="time time-stule-2" datetime="{{$date.date}}"> <strong class="text-3">{{$date.day}}</strong><strong class="text-4">{{$date.month}}</strong></time>
 													<div class="extra-wrap">
-														<h4 class="indent-top"><a href="#">{{$date.city}}</a></h4>
-														<strong>{{$date.venue}}:</strong> {{$date.notes}}
+														<h4 class="indent-top"><a href="#">{{$date.venue}}</a> @ {{$date.time}}</h4>
+														<strong>{{$date.city}}:</strong> {{$date.notes}}
 													</div>
 												</div>
 											{{else}}
@@ -44,7 +45,7 @@
 											{{end}}
 											</div>
 										</article>
-										<article class="grid_4 omega">
+										<article class="grid_6 omega">
 											<div class="padding-grid-4">
 											{{range $i, $date := $dates}}
 												<div class="{{if (lt $i (sub (len $dates) 1))}}margin-bot1{{end}}"><!--
@@ -59,15 +60,15 @@
 										<h3>Past <strong>Show Dates</strong></h3>
 									</div>	
 									<div class="wrapper">
-									{{$dates := (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, city, venue, notes from show where date < current_date order by date desc limit 10`)}}
-										<article class="grid_4 alpha">
+									{{$dates := (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, to_char(date, 'HH:MI pm') as time, city, venue, notes from show where date < current_date order by date desc limit 10`)}}
+										<article class="grid_6 alpha">
 											<div class="padding-grid-1">
 											{{range $i, $date := $dates}}
 												<div class="wrapper{{if (lt $i (sub (len $dates) 1))}} img-indent-bot2{{end}}">
 													<time class="time time-stule-2" datetime="{{$date.date}}"> <strong class="text-3">{{$date.day}}</strong><strong class="text-4">{{$date.month}}</strong></time>
 													<div class="extra-wrap">
-														<h4 class="indent-top"><a href="#">{{$date.city}}</a></h4>
-														<strong>{{$date.venue}}:</strong> {{$date.notes}}
+														<h4 class="indent-top" style="white-space: nowrap"><a href="#">{{$date.venue}} @ {{$date.time}}</a></h4>
+														<strong>{{$date.city}}:</strong> {{$date.notes}}
 													</div>
 												</div>
 											{{else}}
@@ -79,7 +80,7 @@
 											{{end}}
 											</div>
 										</article>
-										<article class="grid_4 omega">
+										<article class="grid_6 omega">
 											<div class="padding-grid-4">
 											{{range $i, $date := $dates}}
 												<div class="{{if (lt $i (sub (len $dates) 1))}}margin-bot1{{end}}"><!--
@@ -92,7 +93,7 @@
 									</div>
 								</div>
 <!--
-								<article class="grid_4 alpha">
+								<article class="grid_6 alpha">
 									<div class="padding-grid-3">
 										<h3>Past <strong>Tours</strong></h3>
 										<ul class="list-3">

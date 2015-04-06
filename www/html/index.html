@@ -29,9 +29,11 @@
 					<div class="slider-wrapper">
 						<div class="slider">
 							<ul class="items">
-								<li><img src="{{$.Static}}/images/slider-img1.jpg" alt="" /></li>
-								<li><img src="{{$.Static}}/images/slider-img2.jpg" alt="" /></li>
-								<li><img src="{{$.Static}}/images/slider-img3.jpg" alt="" /></li>
+								<li><img src="//pics.oneintenband.com/main/slider-1.jpg" alt="" /></li>
+								<li><img src="//pics.oneintenband.com/main/slider-2.jpg" alt="" /></li>
+								<li><img src="//pics.oneintenband.com/main/slider-3.jpg" alt="" /></li>
+								<li><img src="//pics.oneintenband.com/main/slider-4.jpg" alt="" /></li>
+								<li><img src="//pics.oneintenband.com/main/slider-5.jpg" alt="" /></li>
 							</ul> 
 						</div>
 					</div>
@@ -61,12 +63,12 @@
 									<article class="grid_4 alpha">
 										<div class="padding-grid-1">
 											<h3>Show <strong>Dates</strong></h3>
-										{{range (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, city, venue, notes from show where date >= current_date order by date asc limit 3`)}}
+										{{range (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, to_char(date, 'HH:MI pm') as time, city, venue, notes from show where date >= current_date order by date asc limit 3`)}}
 											<div class="wrapper img-indent-bot2">
 												<time class="time time-stule-2" datetime="{{.date}}"> <strong class="text-3">{{.day}}</strong><strong class="text-4">{{.month}}</strong></time>
 												<div class="extra-wrap">
-													<h4 class="indent-top"><a href="#">{{.city}}</a></h4>
-													<strong>{{.venue}}</strong>: {{.notes}}
+													<h4 class="indent-top"><a href="#">{{.venue}}</a> @ {{.time}}</h4>
+													<strong>{{.city}}</strong>: {{.notes}}
 												</div>
 											</div>
 										{{else}}
