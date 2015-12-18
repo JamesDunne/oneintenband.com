@@ -1,125 +1,125 @@
 {{define "dates"}}<!DOCTYPE html>
 
 <html lang="en">
-	<head>
-		<title>One in Ten - audio</title>
+  <head>
+    <title>One in Ten - audio</title>
 {{template "head" $}}
-	</head>
-	<body>
-	<body id="page1">
-		<div class="extra">
-			<header>
-				<div class="main">
+  </head>
+  <body>
+  <body id="page1">
+    <div class="extra">
+      <header>
+        <div class="main">
 {{template "top" $}}
 {{template "nav" $}}
-				</div>
-			</header>
+        </div>
+      </header>
 <!--==============================content================================-->
-			<section id="content"><div class="ic">More Website Templates @ TemplateMonster.com. November 21, 2011!</div>
-				<div class="main">
-					<div class="content-padding-2">
-						<div class="container_12">
-							<div class="wrapper">
-								<div class="grid_8">
-									<div class="padding-grid-1">
-										<h3>Upcoming <strong>Show Dates</strong></h3>
-									</div>	
-									<div class="wrapper">
-									{{$dates := (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, to_char(date, 'HH:MI pm') as time, city, venue, notes from show where date >= current_date order by date asc limit 10`)}}
-										<article class="grid_6 alpha">
-											<div class="padding-grid-1">
-											{{range $i, $date := $dates}}
-												<div class="wrapper{{if (lt $i (sub (len $dates) 1))}} img-indent-bot2{{end}}">
-													<time class="time time-stule-2" datetime="{{$date.date}}"> <strong class="text-3">{{$date.day}}</strong><strong class="text-4">{{$date.month}}</strong></time>
-													<div class="extra-wrap">
-														<h4 class="indent-top"><a href="#">{{$date.venue}}</a> @ {{$date.time}}</h4>
-														<strong>{{$date.city}}:</strong> {{$date.notes}}
-													</div>
-												</div>
-											{{else}}
-												<div class="wrapper img-indent-bot2">
-													<div class="extra-wrap">
-														Sorry; no upcoming shows scheduled yet. Stay tuned!
-													</div>
-												</div>
-											{{end}}
-											</div>
-										</article>
-										<article class="grid_6 omega">
-											<div class="padding-grid-4">
-											{{range $i, $date := $dates}}
-												<div class="{{if (lt $i (sub (len $dates) 1))}}margin-bot1{{end}}"><!--
-													<span class="text-width">Tickets:</span> <span class="inline"><a class="link" href="#">http://demolink.org/Okedo</a></span>
-													<span class="text-width">Telephone:</span>  <span class="color-1 inline">+1 959 603 6035</span>
-												--></div>
-											{{end}}
-											</div>
-										</article>
-									</div>
-									<div class="padding-grid-1">
-										<h3>Past <strong>Show Dates</strong></h3>
-									</div>	
-									<div class="wrapper">
-									{{$dates := (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, to_char(date, 'HH:MI pm') as time, city, venue, notes from show where date < current_date order by date desc limit 10`)}}
-										<article class="grid_6 alpha">
-											<div class="padding-grid-1">
-											{{range $i, $date := $dates}}
-												<div class="wrapper{{if (lt $i (sub (len $dates) 1))}} img-indent-bot2{{end}}">
-													<time class="time time-stule-2" datetime="{{$date.date}}"> <strong class="text-3">{{$date.day}}</strong><strong class="text-4">{{$date.month}}</strong></time>
-													<div class="extra-wrap">
-														<h4 class="indent-top" style="white-space: nowrap"><a href="#">{{$date.venue}} @ {{$date.time}}</a></h4>
-														<strong>{{$date.city}}:</strong> {{$date.notes}}
-													</div>
-												</div>
-											{{else}}
-												<div class="wrapper img-indent-bot2">
-													<div class="extra-wrap">
-														No recent past shows found.
-													</div>
-												</div>
-											{{end}}
-											</div>
-										</article>
-										<article class="grid_6 omega">
-											<div class="padding-grid-4">
-											{{range $i, $date := $dates}}
-												<div class="{{if (lt $i (sub (len $dates) 1))}}margin-bot1{{end}}"><!--
-													<span class="text-width">Tickets:</span> <span class="inline"><a class="link" href="#">http://demolink.org/Okedo</a></span>
-													<span class="text-width">Telephone:</span>  <span class="color-1 inline">+1 959 603 6035</span>
-												--></div>
-											{{end}}
-											</div>
-										</article>
-									</div>
-								</div>
+      <section id="content"><div class="ic">More Website Templates @ TemplateMonster.com. November 21, 2011!</div>
+        <div class="main">
+          <div class="content-padding-2">
+            <div class="container_12">
+              <div class="wrapper">
+                <div class="grid_8">
+                  <div class="padding-grid-1">
+                    <h3>Upcoming <strong>Show Dates</strong></h3>
+                  </div>
+                  <div class="wrapper">
+                  {{$dates := (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, to_char(date, 'HH:MI pm') as time, city, venue, notes from show where date >= current_date order by date asc limit 10`)}}
+                    <article class="grid_6 alpha">
+                      <div class="padding-grid-1">
+                      {{range $i, $date := $dates}}
+                        <div class="wrapper{{if (lt $i (sub (len $dates) 1))}} img-indent-bot2{{end}}">
+                          <time class="time time-stule-2" datetime="{{$date.date}}"> <strong class="text-3">{{$date.day}}</strong><strong class="text-4">{{$date.month}}</strong></time>
+                          <div class="extra-wrap">
+                            <h4 class="indent-top"><a href="#">{{$date.venue}}</a> @ {{$date.time}}</h4>
+                            <strong>{{$date.city}}:</strong> {{$date.notes}}
+                          </div>
+                        </div>
+                      {{else}}
+                        <div class="wrapper img-indent-bot2">
+                          <div class="extra-wrap">
+                            Sorry; no upcoming shows scheduled yet. Stay tuned!
+                          </div>
+                        </div>
+                      {{end}}
+                      </div>
+                    </article>
+                    <article class="grid_6 omega">
+                      <div class="padding-grid-4">
+                      {{range $i, $date := $dates}}
+                        <div class="{{if (lt $i (sub (len $dates) 1))}}margin-bot1{{end}}"><!--
+                          <span class="text-width">Tickets:</span> <span class="inline"><a class="link" href="#">http://demolink.org/Okedo</a></span>
+                          <span class="text-width">Telephone:</span>  <span class="color-1 inline">+1 959 603 6035</span>
+                        --></div>
+                      {{end}}
+                      </div>
+                    </article>
+                  </div>
+                  <div class="padding-grid-1">
+                    <h3>Past <strong>Show Dates</strong></h3>
+                  </div>
+                  <div class="wrapper">
+                  {{$dates := (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, to_char(date, 'HH:MI pm') as time, city, venue, notes from show where date < current_date order by date desc limit 10`)}}
+                    <article class="grid_6 alpha">
+                      <div class="padding-grid-1">
+                      {{range $i, $date := $dates}}
+                        <div class="wrapper{{if (lt $i (sub (len $dates) 1))}} img-indent-bot2{{end}}">
+                          <time class="time time-stule-2" datetime="{{$date.date}}"> <strong class="text-3">{{$date.day}}</strong><strong class="text-4">{{$date.month}}</strong></time>
+                          <div class="extra-wrap">
+                            <h4 class="indent-top" style="white-space: nowrap"><a href="#">{{$date.venue}} @ {{$date.time}}</a></h4>
+                            <strong>{{$date.city}}:</strong> {{$date.notes}}
+                          </div>
+                        </div>
+                      {{else}}
+                        <div class="wrapper img-indent-bot2">
+                          <div class="extra-wrap">
+                            No recent past shows found.
+                          </div>
+                        </div>
+                      {{end}}
+                      </div>
+                    </article>
+                    <article class="grid_6 omega">
+                      <div class="padding-grid-4">
+                      {{range $i, $date := $dates}}
+                        <div class="{{if (lt $i (sub (len $dates) 1))}}margin-bot1{{end}}"><!--
+                          <span class="text-width">Tickets:</span> <span class="inline"><a class="link" href="#">http://demolink.org/Okedo</a></span>
+                          <span class="text-width">Telephone:</span>  <span class="color-1 inline">+1 959 603 6035</span>
+                        --></div>
+                      {{end}}
+                      </div>
+                    </article>
+                  </div>
+                </div>
 <!--
-								<article class="grid_6 alpha">
-									<div class="padding-grid-3">
-										<h3>Past <strong>Tours</strong></h3>
-										<ul class="list-3">
-											<li><a href="#">Lorem ipsum dolor consctetur</a></li>
-											<li><a href="#">Adipisicing eusmod tempor incididunt</a></li>
-											<li><a href="#">Dolore magna aliqua enim ad minim</a></li>
-											<li><a href="#">Quis nostrud exercitation ullamco laboris</a></li>
-											<li><a href="#">Nisi ut aliquip ex ea commodo</a></li>
-											<li><a href="#">Duis aute irure dolor in reprehenderit</a></li>
-											<li><a href="#">Coluptate velit esse cillum</a></li>
-											<li><a href="#">Dolore eu fugiat nulla pariatur</a></li>
-											<li><a href="#">Excepteur sint occaecat cupidatat</a></li>
-											<li><a href="#">Sunt in culpa qui officia</a></li>
-											<li><a href="#">Deserunt mollit anim id est laborum</a></li>
-										</ul>
-									</div>
-								</article>
--->	
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="block"></div>
-			</section>
-		</div>
+                <article class="grid_6 alpha">
+                  <div class="padding-grid-3">
+                    <h3>Past <strong>Tours</strong></h3>
+                    <ul class="list-3">
+                      <li><a href="#">Lorem ipsum dolor consctetur</a></li>
+                      <li><a href="#">Adipisicing eusmod tempor incididunt</a></li>
+                      <li><a href="#">Dolore magna aliqua enim ad minim</a></li>
+                      <li><a href="#">Quis nostrud exercitation ullamco laboris</a></li>
+                      <li><a href="#">Nisi ut aliquip ex ea commodo</a></li>
+                      <li><a href="#">Duis aute irure dolor in reprehenderit</a></li>
+                      <li><a href="#">Coluptate velit esse cillum</a></li>
+                      <li><a href="#">Dolore eu fugiat nulla pariatur</a></li>
+                      <li><a href="#">Excepteur sint occaecat cupidatat</a></li>
+                      <li><a href="#">Sunt in culpa qui officia</a></li>
+                      <li><a href="#">Deserunt mollit anim id est laborum</a></li>
+                    </ul>
+                  </div>
+                </article>
+-->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="block"></div>
+      </section>
+    </div>
 {{template "footer" $}}
-	</body>
+  </body>
 </html>
 {{end}}

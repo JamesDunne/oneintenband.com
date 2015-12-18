@@ -1,182 +1,182 @@
 {{define "audio"}}<!DOCTYPE html>
 
 <html lang="en">
-	<head>
-		<title>One in Ten - audio</title>
+  <head>
+    <title>One in Ten - audio</title>
 {{template "head" $}}
-		<script type="text/javascript" src="{{$.Static}}/jp/jquery.jplayer.min.js"></script>
-		<style type="text/css">
+    <script type="text/javascript" src="{{$.Static}}/jp/jquery.jplayer.min.js"></script>
+    <style type="text/css">
 #jplayer-ui ul {
-	list-style-type:none;
-	padding:0;
-	margin:0.5em 0;
-	width:100%;
-	overflow:hidden;
+  list-style-type:none;
+  padding:0;
+  margin:0.5em 0;
+  width:100%;
+  overflow:hidden;
 }
 
 #jplayer-ui ul span {
-	color: #A0A600;
+  color: #A0A600;
 }
 
 #jplayer-ui p {
-	margin:0;
+  margin:0;
 }
 
 #jplayer-ui li {
-	float:left;
-	margin-right:1em;
+  float:left;
+  margin-right:1em;
 }
 
 #jplayer-ui .jp-volume-bar, #jplayer-ui .jp-seek-bar {
-	font-family: monospace;
-	text-decoration: none;
+  font-family: monospace;
+  text-decoration: none;
 }
-		</style>
-	</head>
-	<body>
-		<div class="extra">
-			<header>
-				<div class="main">
+    </style>
+  </head>
+  <body>
+    <div class="extra">
+      <header>
+        <div class="main">
 {{template "top" $}}
 {{template "nav" $}}
-				</div>
-			</header>
+        </div>
+      </header>
 <!--==============================content================================-->
-			<section id="content"><div class="ic">More Website Templates @ TemplateMonster.com. November 21, 2011!</div>
-				<div class="main">
-					<div class="content-padding-2">
-						<div class="container_12">
-							<div class="wrapper">
-								<div id="jplayer"></div>
-								<div id="tracks" class="grid_12">
-									<div class="padding-grid-1">
-										<h3 class="letter">Our <strong>Discography</strong></h3>
-									</div>
+      <section id="content"><div class="ic">More Website Templates @ TemplateMonster.com. November 21, 2011!</div>
+        <div class="main">
+          <div class="content-padding-2">
+            <div class="container_12">
+              <div class="wrapper">
+                <div id="jplayer"></div>
+                <div id="tracks" class="grid_12">
+                  <div class="padding-grid-1">
+                    <h3 class="letter">Our <strong>Discography</strong></h3>
+                  </div>
 
-									<!-- jplayer: -->
-									<div class="padding-grid-1" id="jplayer-ui">
-										<p>
-											<span class="jp-current-time"></span>&nbsp;<a class="jp-seek-bar" href="#"></a>&nbsp;<span class="jp-duration"></span>
-											<a class="jp-play" href="#">Play</a>
-											<a class="jp-pause" href="#">Pause</a>
-											<a class="jp-stop" href="#">Stop</a>
-										</p>
-										<ul>
-											<li>volume :</li>
-											<li><a class="jp-mute" href="#">Mute</a></li>
-											<li><a class="jp-unmute" href="#">Unmute</a></li>
-											<li><a class="jp-volume-bar" href="#">|&lt;----------------------------------&gt;|</a></li>
-											<li><a class="jp-volume-max" href="#">Max</a></li>
-										</ul>
-									</div>
+                  <!-- jplayer: -->
+                  <div class="padding-grid-1" id="jplayer-ui">
+                    <p>
+                      <span class="jp-current-time"></span>&nbsp;<a class="jp-seek-bar" href="#"></a>&nbsp;<span class="jp-duration"></span>
+                      <a class="jp-play" href="#">Play</a>
+                      <a class="jp-pause" href="#">Pause</a>
+                      <a class="jp-stop" href="#">Stop</a>
+                    </p>
+                    <ul>
+                      <li>volume :</li>
+                      <li><a class="jp-mute" href="#">Mute</a></li>
+                      <li><a class="jp-unmute" href="#">Unmute</a></li>
+                      <li><a class="jp-volume-bar" href="#">|&lt;----------------------------------&gt;|</a></li>
+                      <li><a class="jp-volume-max" href="#">Max</a></li>
+                    </ul>
+                  </div>
 
-									{{$albums := (query `select a.album_id, to_char(a.date, 'YYYY-MM-DD') as date, to_char(a.date, 'YYYY') as year, a.title, a.description, a.best_album_mix_id, m.mix_name from album a, album_mix m where a.best_album_mix_id = m.album_mix_id order by a.date desc`)}}
-									{{range $i, $album := $albums}}
-									<div class="wrapper{{if (lt $i (sub (len $albums) 1))}} p3{{end}}">
-										<article class="grid_4 alpha">
-											<div class="padding-grid-2">
-												<div class="wrapper">
-													<figure class="style-img-2 fleft"><a href="#"><img src="{{$.Static}}/images/page2-img1.jpg" alt=""></a></figure>
-												</div>
-											</div>
-										</article>
-										<article class="grid_8 alpha">
-											<div class="padding-grid-2">
-												<h4 class="margin-none indent-top1"><strong>{{$album.year}}.</strong>  {{$album.title}}{{with $album.mix_name}} (mix {{.}}){{end}}</h4>
-												<p class="prev-indent-bot">{{html (string $album.description)}}</p>
-												<div class="wrapper">
-												{{$songs := (query `select to_char(track, 'FM00') as track, title, artist from song where album_mix_id = $1` $album.best_album_mix_id)}}
-													<ul class="list-1 fleft">
-													{{range $songs}}
-														<li><a class="track" href="//mp3.oneintenband.com/{{ (printf "%s/%s/%s - %s.mp3" $album.date $album.mix_name .track .title) }}">{{.track}}. {{.title}}{{with .artist}}  // {{.}}{{end}}</a></li>
-													{{end}}
-													</ul>
-												</div>
-											</div>
-										</article>
-									</div>
-									{{end}}
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="block"></div>
-			</section>
-		</div>
+                  {{$albums := (query `select a.album_id, to_char(a.date, 'YYYY-MM-DD') as date, to_char(a.date, 'YYYY') as year, a.title, a.description, a.best_album_mix_id, m.mix_name from album a, album_mix m where a.best_album_mix_id = m.album_mix_id order by a.date desc`)}}
+                  {{range $i, $album := $albums}}
+                  <div class="wrapper{{if (lt $i (sub (len $albums) 1))}} p3{{end}}">
+                    <article class="grid_4 alpha">
+                      <div class="padding-grid-2">
+                        <div class="wrapper">
+                          <figure class="style-img-2 fleft"><a href="#"><img src="{{$.Static}}/images/page2-img1.jpg" alt=""></a></figure>
+                        </div>
+                      </div>
+                    </article>
+                    <article class="grid_8 alpha">
+                      <div class="padding-grid-2">
+                        <h4 class="margin-none indent-top1"><strong>{{$album.year}}.</strong>  {{$album.title}}{{with $album.mix_name}} (mix {{.}}){{end}}</h4>
+                        <p class="prev-indent-bot">{{html (string $album.description)}}</p>
+                        <div class="wrapper">
+                        {{$songs := (query `select to_char(track, 'FM00') as track, title, artist from song where album_mix_id = $1` $album.best_album_mix_id)}}
+                          <ul class="list-1 fleft">
+                          {{range $songs}}
+                            <li><a class="track" href="//mp3.oneintenband.com/{{ (printf "%s/%s/%s - %s.mp3" $album.date $album.mix_name .track .title) }}">{{.track}}. {{.title}}{{with .artist}}  // {{.}}{{end}}</a></li>
+                          {{end}}
+                          </ul>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+                  {{end}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="block"></div>
+      </section>
+    </div>
 {{template "footer" $}}
-		<script type="text/javascript">
-	function repeat(s, l) {
-		var word;
-		for (word = ''; word.length < l; word += s) {}
-		return word;
-	}
+    <script type="text/javascript">
+  function repeat(s, l) {
+    var word;
+    for (word = ''; word.length < l; word += s) {}
+    return word;
+  }
 
-	$(function() {
-		var jp = $("#jplayer"),
-			my_trackName = $("#tracks .track-name"),
-			my_playState = $("#tracks .play-state"),
-			my_seekBar = $("#jplayer-ui .jp-seek-bar");
+  $(function() {
+    var jp = $("#jplayer"),
+      my_trackName = $("#tracks .track-name"),
+      my_playState = $("#tracks .play-state"),
+      my_seekBar = $("#jplayer-ui .jp-seek-bar");
 
-		// Some options
-		var	opt_play_first = false, // If true, will attempt to auto-play the default track on page loads. No effect on mobile devices, like iOS.
-			opt_auto_play = true, // If true, when a track is selected, it will auto-play.
-			opt_text_playing = "Now playing", // Text when playing
-			opt_text_selected = "Track selected"; // Text when not playing
+    // Some options
+    var  opt_play_first = false, // If true, will attempt to auto-play the default track on page loads. No effect on mobile devices, like iOS.
+      opt_auto_play = true, // If true, when a track is selected, it will auto-play.
+      opt_text_playing = "Now playing", // Text when playing
+      opt_text_selected = "Track selected"; // Text when not playing
 
-		// A flag to capture the first track
-		var first_track = true;
+    // A flag to capture the first track
+    var first_track = true;
 
-		// Change the time format
-		$.jPlayer.timeFormat.padMin = false;
-		$.jPlayer.timeFormat.padSec = true;
-		$.jPlayer.timeFormat.sepMin = ":";
-		$.jPlayer.timeFormat.sepSec = "";
+    // Change the time format
+    $.jPlayer.timeFormat.padMin = false;
+    $.jPlayer.timeFormat.padSec = true;
+    $.jPlayer.timeFormat.sepMin = ":";
+    $.jPlayer.timeFormat.sepSec = "";
 
-		// Set up jplayer:
-		jp.jPlayer({
-			ready: function () {
-				$("#tracks .track").first().click();
-			},
-			timeupdate: function(event) {
-				// Update our ASCII seek bar:
-				var p = event.jPlayer.status.currentPercentAbsolute;
-				var bar_left = repeat('-', Math.max(0, p - 1));
-				var bar_right = repeat('-', Math.max(0, 99 - p));
-				my_seekBar.text('[' + bar_left + '|' + bar_right + ']');
-			},
-			play: function(event) {
-			},
-			pause: function(event) {
-			},
-			ended: function(event) {
-			},
-			swfPath: "{{$.Static}}/jp/",
-			cssSelectorAncestor: "#tracks",
-			supplied: "mp3",
-			wmode: "window",
-			volume: 1.0
-		});
+    // Set up jplayer:
+    jp.jPlayer({
+      ready: function () {
+        $("#tracks .track").first().click();
+      },
+      timeupdate: function(event) {
+        // Update our ASCII seek bar:
+        var p = event.jPlayer.status.currentPercentAbsolute;
+        var bar_left = repeat('-', Math.max(0, p - 1));
+        var bar_right = repeat('-', Math.max(0, 99 - p));
+        my_seekBar.text('[' + bar_left + '|' + bar_right + ']');
+      },
+      play: function(event) {
+      },
+      pause: function(event) {
+      },
+      ended: function(event) {
+      },
+      swfPath: "{{$.Static}}/jp/",
+      cssSelectorAncestor: "#tracks",
+      supplied: "mp3",
+      wmode: "window",
+      volume: 1.0
+    });
 
-		// Click handler for track link:
-		$("#tracks .track").click(function(e) {
-			e.preventDefault();
+    // Click handler for track link:
+    $("#tracks .track").click(function(e) {
+      e.preventDefault();
 
-			my_trackName.text($(this).text());
-			jp.jPlayer("setMedia", {
-				mp3: $(this).attr("href")
-			});
+      my_trackName.text($(this).text());
+      jp.jPlayer("setMedia", {
+        mp3: $(this).attr("href")
+      });
 
-			if ((opt_play_first && first_track) || (opt_auto_play && !first_track)) {
-				jp.jPlayer("play");
-			}
-			first_track = false;
+      if ((opt_play_first && first_track) || (opt_auto_play && !first_track)) {
+        jp.jPlayer("play");
+      }
+      first_track = false;
 
-			$(this).blur();
-			return false;
-		});
-	});
-		</script>
-	</body>
+      $(this).blur();
+      return false;
+    });
+  });
+    </script>
+  </body>
 </html>
 {{end}}
