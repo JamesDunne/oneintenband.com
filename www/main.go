@@ -18,16 +18,17 @@ import (
 )
 
 const (
-	dbConnectionString = "host=localhost sslmode=disable dbname=band user=band password=band"
+	defaultDbConnectionString = "host=localhost sslmode=disable dbname=band user=band password=band"
 )
 
 var (
-	html_folder = ""
-	staticHref  = ""
-	verbose     = false
-	debug       = false
-	failsafe    = false
-	db          *sql.DB
+	html_folder        = ""
+	staticHref         = ""
+	verbose            = false
+	debug              = false
+	failsafe           = false
+	dbConnectionString string
+	db                 *sql.DB
 )
 
 func html_path() string { return base.CanonicalSymlinkPath(path.Clean(html_folder)) }
@@ -61,6 +62,7 @@ func main() {
 	flag.BoolVar(&debug, "d", false, "debug logging")
 	flag.BoolVar(&failsafe, "f", false, "failsafe mode - SQL errors return empty resultsets")
 	// TODO: configurable DB connection string
+	flag.StringVar(&dbConnectionString, "db", defaultDbConnectionString, "DB connection string")
 	flag.Parse()
 
 	// Parse all the URIs:
