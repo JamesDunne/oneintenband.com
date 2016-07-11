@@ -47,19 +47,22 @@ func debugfmtArgs(args ...interface{}) string {
 }
 
 func RunQuery(sql string, args ...interface{}) (results []map[string]interface{}, err error) {
+	results = make([]map[string]interface{}, 0, 10)
+
 	rows, err := db.Query(sql, args...)
 	if err != nil {
 		debug_log("SQL: %s\nargs: %s\nERROR: %s\n", sql, debugfmtArgs(args...), err.Error())
-		return nil, err
+		//return nil, err
+		return results, nil
 	}
 	defer rows.Close()
 
 	colNames, err := rows.Columns()
 	if err != nil {
-		return nil, err
+		debug_log("SQL: %s\nargs: %s\nERROR: %s\n", sql, debugfmtArgs(args...), err.Error())
+		//return nil, err
+		return results, nil
 	}
-
-	results = make([]map[string]interface{}, 0, 10)
 
 	colValues := make([]interface{}, len(colNames))
 	cols := make([]interface{}, len(colNames))
