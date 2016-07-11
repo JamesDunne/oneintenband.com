@@ -26,6 +26,7 @@ var (
 	staticHref  = ""
 	verbose     = false
 	debug       = false
+	failsafe    = false
 	db          *sql.DB
 )
 
@@ -58,6 +59,8 @@ func main() {
 	fl_listen_uri := flag.String("l", "tcp://0.0.0.0:8080", "listen URI (schemes available are tcp, unix)")
 	flag.BoolVar(&verbose, "v", false, "verbose logging")
 	flag.BoolVar(&debug, "d", false, "debug logging")
+	flag.BoolVar(&failsafe, "f", false, "failsafe mode - SQL errors return empty resultsets")
+	// TODO: configurable DB connection string
 	flag.Parse()
 
 	// Parse all the URIs:

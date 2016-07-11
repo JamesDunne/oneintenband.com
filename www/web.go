@@ -52,16 +52,22 @@ func RunQuery(sql string, args ...interface{}) (results []map[string]interface{}
 	rows, err := db.Query(sql, args...)
 	if err != nil {
 		debug_log("SQL: %s\nargs: %s\nERROR: %s\n", sql, debugfmtArgs(args...), err.Error())
-		//return nil, err
-		return results, nil
+		if failsafe {
+			return results, nil
+		} else {
+			return nil, err
+		}
 	}
 	defer rows.Close()
 
 	colNames, err := rows.Columns()
 	if err != nil {
 		debug_log("SQL: %s\nargs: %s\nERROR: %s\n", sql, debugfmtArgs(args...), err.Error())
-		//return nil, err
-		return results, nil
+		if failsafe {
+			return results, nil
+		} else {
+			return nil, err
+		}
 	}
 
 	colValues := make([]interface{}, len(colNames))
