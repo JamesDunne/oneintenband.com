@@ -6,22 +6,29 @@ import (
 	"html/template"
 	"net/http"
 	"net/url"
+	"time"
 )
 
-func Fetch(url string) (results []map[string]interface{}, err error) {
-	results = make([]map[string]interface{}, 0, 10)
+func Fetch(url string) (results map[string]interface{}, err error) {
+	results = make(map[string]interface{})
 
+	debug_log("fetch: start GET %s\n", url)
 	rsp, err := http.Get(url)
 	if err != nil {
+		debug_log("fetch: error GET %s ERROR %s\n", url, err.Error())
 		return results, err
 	}
 
+	defer rsp.Body.Close()
+
+	debug_log("fetch: %d GET %s\n", rsp.StatusCode, url)
 	if rsp.StatusCode != 200 {
 		return results, nil
 	}
 
-	err = json.NewDecoder(rsp.Body).Decode(results)
+	err = json.NewDecoder(rsp.Body).Decode(&results)
 	if err != nil {
+		debug_log("fetch: %d GET %s json decode error %s\n", rsp.StatusCode, url, err.Error())
 		return results, err
 	}
 
@@ -112,4 +119,19 @@ var templateFunctions template.FuncMap = template.FuncMap(map[string]interface{}
 	},
 	"query": RunQuery,
 	"fetch": Fetch,
+	"arr_new": func() []interface{} {
+		return make([]interface{}, 0, 10)
+	},
+	"arr_append": func(a []interface{}, b interface{}) []interface{} {
+		return append(a, b)
+	},
+	"time_parse": func(a string) (time.Time, error) {
+		return time.Parse(time.RFC3339, a)
+	},
+	"time_now": func() time.Time {
+		return time.Now()
+	},
+	"time_after": func(a time.Time, b time.Time) bool {
+		return a.After(b)
+	},
 })

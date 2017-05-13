@@ -1,0 +1,11 @@
+version: '2.0'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_band
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/db:/var/lib/postgresql
+      - ./db/log:/var/log/postgresql
