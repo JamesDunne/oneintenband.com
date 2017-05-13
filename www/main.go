@@ -1,20 +1,20 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
 	"flag"
+	"fmt"
 	"html/template"
 	"log"
 	"net"
 	"net/http"
 	"path"
-)
+	"strconv"
 
-import _ "github.com/lib/pq"
-
-import (
 	"github.com/JamesDunne/go-util/base"
 	"github.com/JamesDunne/go-util/web"
+	_ "github.com/lib/pq"
 )
 
 const (
@@ -49,6 +49,34 @@ func debug_log(fmt string, args ...interface{}) {
 		return
 	}
 	log.Printf(fmt, args...)
+}
+
+func debugfmtArgs(args ...interface{}) string {
+	if len(args) == 0 {
+		return ""
+	}
+
+	sep := ", "
+	n := len(sep) * (len(args) - 1)
+	for i := 0; i < len(args); i++ {
+		n += 20
+		n += (5 + (i / 10) + 1)
+	}
+
+	b := make([]byte, 0, n)
+	buf := bytes.NewBuffer(b)
+	buf.WriteRune('$')
+	buf.WriteString(strconv.FormatInt(int64(1), 10))
+	buf.WriteString(" = ")
+	fmt.Fprintf(buf, "%v", args[0])
+	for i, a := range args[1:] {
+		buf.WriteString(sep)
+		buf.WriteRune('$')
+		buf.WriteString(strconv.FormatInt(int64(1+i+1), 10))
+		buf.WriteString(" = ")
+		fmt.Fprintf(buf, "%v", a)
+	}
+	return buf.String()
 }
 
 var uiTmpl *template.Template
