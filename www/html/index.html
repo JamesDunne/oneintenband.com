@@ -67,13 +67,24 @@
                 <article class="grid_4 alpha">
                   <div class="padding-grid-1">
                     <h3>Show <strong>Dates</strong></h3>
-                  {{range (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, to_char(date, 'HH:MI pm') as time, city, venue, notes from show where date >= current_date order by date asc limit 3`)}}
+{{$rsp := (fetch `https://graph.facebook.com/v2.9/OneInTenBand/events?access_token=280016349127894|eUaDof1f47j6uoTn_tgMsIE5B58`)}}
+{{$events := $rsp.data}}
+                  {{range $i, $date := (upcoming $events)}}
                     <div class="wrapper img-indent-bot2">
-                      <time class="time time-stule-2" datetime="{{.date}}"> <strong class="text-3">{{.day}}</strong><strong class="text-4">{{.month}}</strong></time>
-                      <div class="extra-wrap">
-                        <h4 class="indent-top"><a href="#">{{.venue}}</a> @ {{.time}}</h4>
-                        <strong>{{.city}}</strong>: {{.notes}}
-                      </div>
+					{{$start_time := fb_time $date.start_time}}
+					<time class="time time-stule-2" datetime="{{$date.start_time}}"> <strong class="text-3">{{day $start_time}}</strong><strong class="text-4">{{month $start_time}}</strong></time>
+                          <div class="extra-wrap">
+                            <h4 class="indent-top"><a href="https://www.facebook.com/events/{{$date.id}}/" target="_blank">{{$date.name}}</a></h4>
+						   {{time $start_time}}
+							{{if $date.place}}
+								{{if $date.place.id}}
+									at <a href="https://www.facebook.com/{{$date.place.id}}/" target="_blank">{{$date.place.name}}</a>
+									in {{$date.place.location.city}}, {{$date.place.location.state}}
+								{{else}}
+									at {{$date.place.name}}
+								{{end}}
+							{{end}}
+                          </div>
                     </div>
                   {{else}}
                     <div class="wrapper img-indent-bot2">

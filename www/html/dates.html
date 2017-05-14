@@ -15,20 +15,8 @@
         </div>
       </header>
 <!--==============================content================================-->
-      {{$rsp := (fetch `https://graph.facebook.com/v2.9/OneInTenBand/events?access_token=280016349127894|eUaDof1f47j6uoTn_tgMsIE5B58`)}}
-	  {{$events := $rsp.data}}
-	  {{$upcoming := (arr_new)}}
-	  {{$past := (arr_new)}}
-	  {{range $i, $event := $events}}
-		{{if (time_after (time_parse $event.start_time) time_now)}}
-		  {{arr_append $upcoming $event}}
-		{{else}}
-		  {{arr_append $past $event}}
-		{{end}}
-		<div>{{$event.name}}</div>
-		<div>{{$event.place.name}}</div>
-	  {{end}}
-	  {{$upcoming := (arr_reverse $upcoming)}}
+{{$rsp := (fetch `https://graph.facebook.com/v2.9/OneInTenBand/events?access_token=280016349127894|eUaDof1f47j6uoTn_tgMsIE5B58`)}}
+{{$events := $rsp.data}}
       <section id="content"><div class="ic">More Website Templates @ TemplateMonster.com. November 21, 2011!</div>
         <div class="main">
           <div class="content-padding-2">
@@ -39,15 +27,45 @@
                     <h3>Upcoming <strong>Show Dates</strong></h3>
                   </div>
                   <div class="wrapper">
-                  {{$dates := (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, to_char(date, 'HH:MI pm') as time, city, venue, notes from show where date >= current_date order by date asc limit 10`)}}
+                  {{$dates := (upcoming $events)}}
                     <article class="grid_6 alpha">
                       <div class="padding-grid-1">
-                      {{range $i, $date := $dates}}
+{{/*
+    {
+      "description": "One In Ten is excited to return to one of the best bars in the burbs!  We will be performing with Chicagoland's hottest Alice In Chains tribute band \"Chained\".  These dudes can play!",
+      "end_time": "2017-09-17T01:00:00-0500",
+      "name": "One In Ten W/Special Guest Chained",
+      "place": {
+        "name": "M T Barrels",
+        "location": {
+          "city": "Schaumburg",
+          "country": "United States",
+          "latitude": 42.0038439,
+          "longitude": -88.122295,
+          "state": "IL",
+          "street": "1712 W Wise Rd",
+          "zip": "60193"
+        },
+        "id": "530152613728124"
+      },
+      "start_time": "2017-09-16T21:00:00-0500",
+      "id": "601472590062862"
+    }
+*/}}
+                      {{range $i, $date := $dates}}{{$start_time := fb_time $date.start_time}}
                         <div class="wrapper{{if (lt $i (sub (len $dates) 1))}} img-indent-bot2{{end}}">
-                          <time class="time time-stule-2" datetime="{{$date.date}}"> <strong class="text-3">{{$date.day}}</strong><strong class="text-4">{{$date.month}}</strong></time>
+                          <time class="time time-stule-2" datetime="{{$date.start_time}}"> <strong class="text-3">{{day $start_time}}</strong><strong class="text-4">{{month $start_time}}</strong></time>
                           <div class="extra-wrap">
-                            <h4 class="indent-top"><a href="#">{{$date.venue}}</a> @ {{$date.time}}</h4>
-                            <strong>{{$date.city}}:</strong> {{$date.notes}}
+                            <h4 class="indent-top"><a href="https://www.facebook.com/events/{{$date.id}}/" target="_blank">{{$date.name}}</a></h4>
+						   {{time $start_time}}
+							{{if $date.place}}
+								{{if $date.place.id}}
+									at <a href="https://www.facebook.com/{{$date.place.id}}/" target="_blank">{{$date.place.name}}</a>
+									in {{$date.place.location.city}}, {{$date.place.location.state}}
+								{{else}}
+									at {{$date.place.name}}
+								{{end}}
+							{{end}}
                           </div>
                         </div>
                       {{else}}
@@ -74,15 +92,23 @@
                     <h3>Past <strong>Show Dates</strong></h3>
                   </div>
                   <div class="wrapper">
-                  {{$dates := (query `select to_char(date, 'YYYY-MM-DD') as date, to_char(date, 'mon') as month, to_char(date, 'DD') as day, to_char(date, 'HH:MI pm') as time, city, venue, notes from show where date < current_date order by date desc limit 10`)}}
+                  {{$dates := (past $events)}}
                     <article class="grid_6 alpha">
                       <div class="padding-grid-1">
-                      {{range $i, $date := $dates}}
+                      {{range $i, $date := $dates}}{{$start_time := fb_time $date.start_time}}
                         <div class="wrapper{{if (lt $i (sub (len $dates) 1))}} img-indent-bot2{{end}}">
-                          <time class="time time-stule-2" datetime="{{$date.date}}"> <strong class="text-3">{{$date.day}}</strong><strong class="text-4">{{$date.month}}</strong></time>
+                          <time class="time time-stule-2" datetime="{{$date.start_time}}"> <strong class="text-3">{{day $start_time}}</strong><strong class="text-4">{{month $start_time}}</strong></time>
                           <div class="extra-wrap">
-                            <h4 class="indent-top" style="white-space: nowrap"><a href="#">{{$date.venue}} @ {{$date.time}}</a></h4>
-                            <strong>{{$date.city}}:</strong> {{$date.notes}}
+                            <h4 class="indent-top"><a href="https://www.facebook.com/events/{{$date.id}}/" target="_blank">{{$date.name}}</a></h4>
+						   {{time $start_time}}
+							{{if $date.place}}
+								{{if $date.place.id}}
+									at <a href="https://www.facebook.com/{{$date.place.id}}/" target="_blank">{{$date.place.name}}</a>
+									in {{$date.place.location.city}}, {{$date.place.location.state}}
+								{{else}}
+									at {{$date.place.name}}
+								{{end}}
+							{{end}}
                           </div>
                         </div>
                       {{else}}

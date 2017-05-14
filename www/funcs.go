@@ -93,6 +93,12 @@ func RunQuery(sql string, args ...interface{}) (results []map[string]interface{}
 	return results, nil
 }
 
+const fb_time = "2006-01-02T15:04:05-0700"
+
+func parseFbTime(a string) (time.Time, error) {
+	return time.Parse(fb_time, a)
+}
+
 var templateFunctions template.FuncMap = template.FuncMap(map[string]interface{}{
 	"add": func(a, b int) int { return a + b },
 	"sub": func(a, b int) int { return a - b },
@@ -119,26 +125,30 @@ var templateFunctions template.FuncMap = template.FuncMap(map[string]interface{}
 	},
 	"query": RunQuery,
 	"fetch": Fetch,
-	"arr_new": func() []interface{} {
-		return make([]interface{}, 0, 10)
-	},
-	"arr_append": func(a []interface{}, b interface{}) []interface{} {
-		return append(a, b)
-	},
-	"arr_reverse": func(a []interface{}) []interface{} {
-		reversed := make([]interface{}, len(a))
-		for i, j := 0, len(a)-1; i < j; i, j = i+1, j-1 {
-			reversed[i], reversed[j] = a[j], a[i]
+	"upcoming": func(a []interface{}) []interface{} {
+		upcoming := make([]interface{}, 0, 10)
+		for _, event := range a {
+			if start_time, err := parseFbTime(event.(map[string]interface{})["start_time"].(string)); err == nil {
+				if start_time.After(time.Now()) {
+					upcoming = append([]interface{}{event}, upcoming...)
+				}
+			}
 		}
-		return reversed
+		return upcoming
 	},
-	"time_parse": func(a string) (time.Time, error) {
-		return time.Parse("2006-01-02T15:04:05-0700", a)
+	"past": func(a []interface{}) []interface{} {
+		past := make([]interface{}, 0, 10)
+		for _, event := range a {
+			if start_time, err := parseFbTime(event.(map[string]interface{})["start_time"].(string)); err == nil {
+				if !start_time.After(time.Now()) {
+					past = append(past, event)
+				}
+			}
+		}
+		return past
 	},
-	"time_now": func() time.Time {
-		return time.Now()
-	},
-	"time_after": func(a time.Time, b time.Time) bool {
-		return a.After(b)
-	},
+	"fb_time": parseFbTime,
+	"month":   func(t time.Time) string { return t.Format("Jan") },
+	"day":     func(t time.Time) string { return t.Format("02") },
+	"time":    func(t time.Time) string { return t.Format("03:04 PM") },
 })
