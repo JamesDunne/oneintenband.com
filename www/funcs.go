@@ -125,8 +125,15 @@ var templateFunctions template.FuncMap = template.FuncMap(map[string]interface{}
 	"arr_append": func(a []interface{}, b interface{}) []interface{} {
 		return append(a, b)
 	},
+	"arr_reverse": func(a []interface{}) []interface{} {
+		reversed := make([]interface{}, len(a))
+		for i, j := 0, len(a)-1; i < j; i, j = i+1, j-1 {
+			reversed[i], reversed[j] = a[j], a[i]
+		}
+		return reversed
+	},
 	"time_parse": func(a string) (time.Time, error) {
-		return time.Parse(time.RFC3339, a)
+		return time.Parse("2006-01-02T15:04:05-0700", a)
 	},
 	"time_now": func() time.Time {
 		return time.Now()

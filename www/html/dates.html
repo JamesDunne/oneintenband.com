@@ -15,6 +15,20 @@
         </div>
       </header>
 <!--==============================content================================-->
+      {{$rsp := (fetch `https://graph.facebook.com/v2.9/OneInTenBand/events?access_token=280016349127894|eUaDof1f47j6uoTn_tgMsIE5B58`)}}
+	  {{$events := $rsp.data}}
+	  {{$upcoming := (arr_new)}}
+	  {{$past := (arr_new)}}
+	  {{range $i, $event := $events}}
+		{{if (time_after (time_parse $event.start_time) time_now)}}
+		  {{arr_append $upcoming $event}}
+		{{else}}
+		  {{arr_append $past $event}}
+		{{end}}
+		<div>{{$event.name}}</div>
+		<div>{{$event.place.name}}</div>
+	  {{end}}
+	  {{$upcoming := (arr_reverse $upcoming)}}
       <section id="content"><div class="ic">More Website Templates @ TemplateMonster.com. November 21, 2011!</div>
         <div class="main">
           <div class="content-padding-2">
