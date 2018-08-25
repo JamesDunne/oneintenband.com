@@ -15,7 +15,10 @@
         </div>
       </header>
 <!--==============================content================================-->
-{{$rsp := (fetch `https://graph.facebook.com/v2.9/OneInTenBand/events?access_token=280016349127894|eUaDof1f47j6uoTn_tgMsIE5B58`)}}
+{{/*
+  $rsp := (fetch `https://graph.facebook.com/v2.9/OneInTenBand/events?access_token=280016349127894|eUaDof1f47j6uoTn_tgMsIE5B58`)
+*/}}
+{{$rsp := (openFileJSON `fb_events.json`)}}
 {{$events := $rsp.data}}
       <section id="content"><div class="ic">More Website Templates @ TemplateMonster.com. November 21, 2011!</div>
         <div class="main">

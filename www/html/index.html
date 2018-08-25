@@ -67,7 +67,10 @@
                 <article class="grid_4 alpha">
                   <div class="padding-grid-1">
                     <h3>Show <strong>Dates</strong></h3>
-{{$rsp := (fetch `https://graph.facebook.com/v2.9/OneInTenBand/events?access_token=280016349127894|eUaDof1f47j6uoTn_tgMsIE5B58`)}}
+{{/*
+  $rsp := (fetch `https://graph.facebook.com/v2.9/OneInTenBand/events?access_token=280016349127894|eUaDof1f47j6uoTn_tgMsIE5B58`)
+*/}}
+{{$rsp := (openFileJSON `fb_events.json`)}}
 {{$events := $rsp.data}}
                   {{range $i, $date := (upcoming $events)}}
                     <div class="wrapper img-indent-bot2">

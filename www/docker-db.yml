@@ -9,3 +9,6 @@ services:
     volumes:
       - ./db/db:/var/lib/postgresql
       - ./db/log:/var/log/postgresql
+    environment:
+      POSTGRES_PASSWORD: band
+      POSTGRES_USER: band

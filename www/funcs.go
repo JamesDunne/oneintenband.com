@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"net/http"
 	"net/url"
+	"path/filepath"
 	"time"
 )
 
@@ -30,6 +32,36 @@ func Fetch(url string) (results map[string]interface{}, err error) {
 	if err != nil {
 		debug_log("fetch: %d GET %s json decode error %s\n", rsp.StatusCode, url, err.Error())
 		return results, err
+	}
+
+	return results, nil
+}
+
+func OpenFileJSON(path string) (results map[string]interface{}, err error) {
+	results = make(map[string]interface{})
+
+	var b []byte
+
+	debug_log("openFileJSON: '%s'\n", path)
+	if filepath.IsAbs(path) {
+		return nil, fmt.Errorf("path cannot be absolute")
+	}
+
+	var absPath string
+	absPath, err = filepath.Abs(filepath.Join(html_path(), path))
+	if err != nil {
+		return nil, fmt.Errorf("could not join html path with relative path")
+	}
+
+	debug_log("openFileJSON: readFile('%s')\n", absPath)
+	b, err = ioutil.ReadFile(absPath)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(b, &results)
+	if err != nil {
+		return nil, err
 	}
 
 	return results, nil
@@ -93,13 +125,13 @@ func RunQuery(sql string, args ...interface{}) (results []map[string]interface{}
 	return results, nil
 }
 
-const fb_time = "2006-01-02T15:04:05-0700"
+const fbTime = "2006-01-02T15:04:05-0700"
 
 func parseFbTime(a string) (time.Time, error) {
-	return time.Parse(fb_time, a)
+	return time.Parse(fbTime, a)
 }
 
-var templateFunctions template.FuncMap = template.FuncMap(map[string]interface{}{
+var templateFunctions = template.FuncMap(map[string]interface{}{
 	"add": func(a, b int) int { return a + b },
 	"sub": func(a, b int) int { return a - b },
 	"string": func(a interface{}) (string, error) {
@@ -114,7 +146,7 @@ var templateFunctions template.FuncMap = template.FuncMap(map[string]interface{}
 		if s, ok := a.(fmt.Stringer); ok {
 			return s.String(), nil
 		}
-		return "", fmt.Errorf("Cannot stringify!")
+		return "", fmt.Errorf("cannot stringify")
 	},
 	// URI-escape a string:
 	"uri": func(a string) string {
@@ -123,13 +155,14 @@ var templateFunctions template.FuncMap = template.FuncMap(map[string]interface{}
 	"html": func(a string) template.HTML {
 		return template.HTML(a)
 	},
-	"query": RunQuery,
-	"fetch": Fetch,
+	"query":        RunQuery,
+	"fetch":        Fetch,
+	"openFileJSON": OpenFileJSON,
 	"upcoming": func(a []interface{}) []interface{} {
 		upcoming := make([]interface{}, 0, 10)
 		for _, event := range a {
-			if start_time, err := parseFbTime(event.(map[string]interface{})["start_time"].(string)); err == nil {
-				if start_time.After(time.Now()) {
+			if startTime, err := parseFbTime(event.(map[string]interface{})["start_time"].(string)); err == nil {
+				if startTime.After(time.Now()) {
 					upcoming = append([]interface{}{event}, upcoming...)
 				}
 			}
@@ -139,8 +172,8 @@ var templateFunctions template.FuncMap = template.FuncMap(map[string]interface{}
 	"past": func(a []interface{}) []interface{} {
 		past := make([]interface{}, 0, 10)
 		for _, event := range a {
-			if start_time, err := parseFbTime(event.(map[string]interface{})["start_time"].(string)); err == nil {
-				if !start_time.After(time.Now()) {
+			if startTime, err := parseFbTime(event.(map[string]interface{})["start_time"].(string)); err == nil {
+				if !startTime.After(time.Now()) {
 					past = append(past, event)
 				}
 			}
